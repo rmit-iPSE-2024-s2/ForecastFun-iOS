@@ -25,7 +25,7 @@ struct a2_s3841083_s3971510App: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashScreenView()
         }
         .modelContainer(sharedModelContainer)
     }
