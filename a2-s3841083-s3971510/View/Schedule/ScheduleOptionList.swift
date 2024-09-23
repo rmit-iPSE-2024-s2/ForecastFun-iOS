@@ -19,8 +19,8 @@ struct ScheduleOptionList: View {
                         Text(item.title)
                             .padding(1.5)
                             .frame(width: 60)
-                            .foregroundColor(item == selectedOption ? .white : Color(red: 55/255, green:31/255 , blue: 92/255, opacity: 1.0))
-                            .background(item == selectedOption ? Color(red: 248/255, green:168/255 , blue: 112/255, opacity: 1.0) : .clear)
+                            .foregroundColor(item == selectedOption ? .white : Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0))
+                            .background(item == selectedOption ? Color(red: 40/255, green:40/255 , blue: 40/255, opacity: 1.0) : .clear)
                             .cornerRadius(3)
                     }
                     .onTapGesture{

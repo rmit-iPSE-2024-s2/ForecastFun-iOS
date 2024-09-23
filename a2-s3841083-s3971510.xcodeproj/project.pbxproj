@@ -27,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DD47833D2CA12E88002317AC /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		DDB82F552C9158E500CF8FBB /* DiscoveryScroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryScroll.swift; sourceTree = "<group>"; };
 		DDB82F562C9158E500CF8FBB /* TriangleLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriangleLayout.swift; sourceTree = "<group>"; };
 		DDB82F572C9158E500CF8FBB /* ScheduleOptionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleOptionList.swift; sourceTree = "<group>"; };
@@ -58,6 +59,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DD47833A2CA06977002317AC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		DD47833B2CA06980002317AC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				DDB82F732C915B3500CF8FBB /* Discovery */,
+				DDB82F722C91599300CF8FBB /* Schedule */,
+				DDB82F712C91597300CF8FBB /* TestData */,
+				DDB82F702C91596700CF8FBB /* Fragments */,
+				DDB82F6F2C91593A00CF8FBB /* Activities */,
+				DDB82F6E2C91590800CF8FBB /* Homepage */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		DD47833C2CA12E32002317AC /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				DD47833D2CA12E88002317AC /* LocationManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		DDB82F6E2C91590800CF8FBB /* Homepage */ = {
 			isa = PBXGroup;
 			children = (
@@ -131,12 +160,9 @@
 		DDD0BECB2C914F2200B967A3 /* a2-s3841083-s3971510 */ = {
 			isa = PBXGroup;
 			children = (
-				DDB82F732C915B3500CF8FBB /* Discovery */,
-				DDB82F722C91599300CF8FBB /* Schedule */,
-				DDB82F712C91597300CF8FBB /* TestData */,
-				DDB82F702C91596700CF8FBB /* Fragments */,
-				DDB82F6F2C91593A00CF8FBB /* Activities */,
-				DDB82F6E2C91590800CF8FBB /* Homepage */,
+				DD47833C2CA12E32002317AC /* Managers */,
+				DD47833B2CA06980002317AC /* View */,
+				DD47833A2CA06977002317AC /* Model */,
 				DDD0BECC2C914F2200B967A3 /* a2_s3841083_s3971510App.swift */,
 				DDD0BECE2C914F2200B967A3 /* DummyContentView.swift */,
 				DDD0BED02C914F2200B967A3 /* Item.swift */,

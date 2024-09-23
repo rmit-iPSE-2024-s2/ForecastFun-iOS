@@ -12,8 +12,9 @@ struct RecActivityView: View {
     @State private var toggleConfirm: Bool = false
     var body: some View {
         ZStack{
-            Color(red: 218/255, green:210/255 , blue: 240/255, opacity: 1.0)
+            Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0)
                 .ignoresSafeArea(.all)
+  
             
             
             ZStack {

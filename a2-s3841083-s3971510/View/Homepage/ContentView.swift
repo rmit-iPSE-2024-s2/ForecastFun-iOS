@@ -94,11 +94,12 @@ struct MainTabbedView: View {
                         }
                 }
                 .padding(6)
+
             }
-            .frame(height: 70)
-            .background(Color(red:248/255, green:212/255, blue: 165/255, opacity: 0.9))
-            .cornerRadius(35)
-            .padding(.horizontal, 26)
+            .frame(width:360,height: 65)
+            .background(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0))
+            .cornerRadius(20)
+
         }
     }
 }
@@ -113,7 +114,7 @@ extension MainTabbedView {
                 .resizable()
                 .renderingMode(.template)
                 .frame(width:30, height:30)
-                .foregroundColor(isActive ? .white : .orange)
+                .foregroundColor(isActive ? Color(red:226/255, green:237/255, blue: 255/255, opacity: 1) : Color(red:226/255, green:237/255, blue: 255/255, opacity: 0.4))
             Spacer()
         }
         .cornerRadius(30)

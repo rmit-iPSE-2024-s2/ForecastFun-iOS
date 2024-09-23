@@ -65,12 +65,12 @@ struct ScheduleActivitySection: View {
                         .frame(width: 30, height: 30)
 
                 }
-                .foregroundColor(Color(red: 55/255, green: 31/255 , blue: 92/255, opacity: 1.0))
+                .foregroundColor(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0))
                 .padding(.bottom, 10)
                 .overlay(
                     Rectangle()
                         .frame(height: 1)
-                        .foregroundColor(Color(red: 55/255, green: 31/255 , blue: 92/255, opacity: 1.0)),
+                        .foregroundColor(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0)),
                     alignment: .bottom
                 )
             }
