@@ -20,14 +20,19 @@ let todayForecast = DayForecast(
 import SwiftUI
 
 struct HomeScreen: View {
+    @StateObject var locationManager = LocationManager()
     @State private var showTodayView: Bool = true
     @State private var forecast: UpcomingForecast? = nil
     var icons = ["precipitation", "24" ,"6", "11"]
     
+    var weather: ResponseBody
+    
     var body: some View {
         NavigationView{
+
+            
             ZStack{
-                Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0)
+                Color(red: 43/255, green:58/255 , blue: 84/255, opacity: 1.0)
                     .ignoresSafeArea(.all)
                 VStack(spacing:20) {
                     
@@ -85,32 +90,35 @@ struct HomeScreen: View {
 
                     
                     if showTodayView{
-                        VStack(spacing:35){
+                        VStack(spacing:0){
                         
-                            HStack(spacing:25)
+                            HStack(spacing:10)
                             {
-                                Image(systemName: "\(todayForecast.mainCondition)")
+                                Image("partly-cloudy-day")
                                     .resizable()
-                                    .frame(width: 130, height: 81)
-                                    .foregroundColor(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0))
+                                    .frame(width: 150, height: 150)
+                                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
                                     .padding()
                                             
                                 
                                 VStack{
-                                    Text("21°C")
+                                    let locationName = weather.timezone.split(separator: "/")
+                                    let state = locationName[1].replacingOccurrences(of: "_", with: " ")
+                                    let country = locationName[0].replacingOccurrences(of: "_", with: " ")
+                                    Text("\(weather.current.temp.roundDouble())°C")
                                         .font(.system(size:60))
                                         .fontWeight(.thin)
-                                    Text("Melbourne, Victoria")
-                                        .font(.system(size:13))
+                                    Text("\(state), \(country)")
+                                        .font(.system(size:14))
                                 }
                                 .padding()
                             }
-                            .padding(.top,30)
+                            .padding(.top,20)
       
                             HStack(spacing:5){
                                 
                                 VStack{
-                                    Text("2km/h")
+                                    Text("\(weather.current.wind_speed.roundDouble())km/h")
                                         .fontWeight(.semibold)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .font(.system(size:20))
@@ -121,7 +129,7 @@ struct HomeScreen: View {
                                 }
                                 
                                 VStack{
-                                    Text("20%")
+                                    Text("\(weather.current.humidity)%")
                                         .fontWeight(.semibold)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .font(.system(size:20))
@@ -132,7 +140,7 @@ struct HomeScreen: View {
                                 
                                 
                                 VStack{
-                                    Text("0mm")
+                                    Text("\(weather.precipitation.roundDouble())mm")
                                         .fontWeight(.semibold)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .font(.system(size:20))
@@ -151,7 +159,13 @@ struct HomeScreen: View {
                     }
                     
                     else{
-                        fourDayView(forecast: $forecast)
+                        VStack(spacing: 10){
+//                            Text("4-Day Forecast")
+//                                .frame(maxWidth: .infinity, alignment: .leading)
+//                                .fontWeight(.semibold)
+//                                .padding(.leading, 30)
+                            fourDayView(weather: weather)
+                        }
                     }
                     
                     VStack(spacing:-2){
@@ -172,20 +186,23 @@ struct HomeScreen: View {
                             }
                         
                         VStack{
-                            Text("Scheduled Activity")
+                            Text("Nexy Scheduled Activity")
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 30)
                             nextScheduledView()
-                            nextScheduledView()
+
+                            Spacer()
+                            
                         }
+                        .frame(height:217)
+//                        .background(.black)
                     }
                     
                 }
-
-                .foregroundColor(Color(red: 59/255, green:57/255 , blue: 52/255, opacity: 1.0))
+                .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
             }
-
+            
 
             
         }
@@ -195,7 +212,7 @@ struct HomeScreen: View {
 
 struct HomeScreen_Previews: PreviewProvider {
     static var previews: some View {
-        HomeScreen()
+        HomeScreen(weather: previewWeather)
     }
 }
 
@@ -208,173 +225,192 @@ struct ActivityView: View {
             VStack(spacing:5){
                     HStack {
                         
-                        Text(title)
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.system(size:18))
-                                .foregroundColor(Color(red: 59/255, green:57/255 , blue: 52/255, opacity: 1.0))
-                        
-                        NavigationLink(destination:RecActivityView()){
-                        Image(systemName: "arrow.forward.circle.fill")
-                            .resizable()
-                            .frame(width:25, height:25)
-                            .foregroundColor(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0))
+                            Text(title)                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.system(size:22))
+                                                        
+                            NavigationLink(destination:RecActivityView()){
+                            Image(systemName: "arrow.forward.circle")
+                                .resizable()
+                                .frame(width:20, height:20)
                             }
                         
-                        
                         }
+                        .padding(.bottom, 8)
+                        .overlay(
+                            Rectangle()
+                                .frame(height: 3)
+                                .cornerRadius(10)
+                                .foregroundColor(Color(red: 138/255, green:194/255 , blue: 150/255, opacity: 1.6)) // green color for the border
+                                .padding(.top, 32), // push the border to the bottom, adjust as per view size
+                            alignment: .bottom // align overlay to the bottom
+                        )
+                        .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                    
+                ZStack {
                     Text("Good Conditions")
-                            .padding(5)
-                            .background(Color(red: 138/255, green:194/255 , blue: 150/255, opacity: 1.0))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
-                            .foregroundColor(.white)
-                            .font(.system(size:15))
-                        
+                        .font(.system(size:15))
+                }
+                .padding(.bottom, 3)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .cornerRadius(6)
+                
+
             }
             .padding(12)
-            .background(Color(red:199/255, green:217/255, blue: 244/255, opacity: 1))
+            .background(Color(red:74/255, green:99/255, blue: 143/255, opacity: 1))
             .cornerRadius(20)
             .frame(width: 230)
             
         }
+        
     }
 }
 
 
 struct nextScheduledView : View{
     var body: some View{
-        HStack{
-            VStack(spacing:2){
-                Text("MON")
-                    .fontWeight(.bold)
-                Text("7AM")
-            }
-            .font(.system(size:25))
-            .padding(14)
-            .foregroundColor(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0))
-            
-            VStack(spacing:13){
-                Text("Running @ Graham Park")
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.system(size:17.5))
-                HStack{
-                    Text("Good Conditions")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
-                        .font(.system(size:17))
-                        .padding(.bottom,2)
+        VStack{
+            HStack{
+                VStack(spacing:2){
+                    Text("MON")
+                        .fontWeight(.bold)
+                    Text("7AM")
                 }
-                .foregroundColor(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 0.7))
+                .font(.system(size:23))
+                .padding(15)
+                .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                
+                VStack(spacing:13){
+                    Text("Running @ Graham Park")
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size:17.5))
+                    HStack{
+                        Text("Good Conditions")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
+                            .font(.system(size:17))
+                            .fontWeight(.semibold)
+                            .padding(.bottom,2)
+                    }
+                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.7))
+                    
+                }
+                .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
                 
             }
-            .foregroundColor(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0))
+            .background(Color(red:74/255, green:99/255, blue: 143/255, opacity: 1))
+            .cornerRadius(20)
+            .frame(width: 360)
+            
+            // Add new scheduled activity
+            HStack{
+                
+                HStack{
+                Image(systemName :"calendar")
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                    
+                    
+                
 
+                Text("New Scheduled Activity")
+                    .fontWeight(.bold)
+                    .padding(.horizontal, 15)
+                    .font(.system(size:17.5))
+                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                
+                Image(systemName :"arrow.forward.circle")
+                    .resizable()
+                    .frame(width: 25, height: 25)
+                    
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(24)
+                
+            }
+            .background(Color(red:74/255, green:99/255, blue: 143/255, opacity: 1))
+            .cornerRadius(20)
+            .frame(width: 360)
         }
-        .background(Color(red:199/255, green:217/255, blue: 244/255, opacity: 1))
-        .cornerRadius(20)
-        .frame(width: 360)
+        
+        
     }
 }
 
 
 
 struct fourDayView: View {
-    @Binding var forecast: UpcomingForecast?
+    var weather: ResponseBody
     
     var body: some View{
         VStack {
-                    ForEach(UpcomingForecast.allCases, id: \.self) { item in
+            Text("4-Day Forecast")
+                .padding()
+                .padding(.bottom, -5)
+                .frame(width: 350, alignment: .leading)
+                .overlay(
+                    Rectangle()
+                        .frame(width: 323, height: 2)
+                        .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255))
+                        .opacity(0.7),
+                    alignment: .bottom
+                )
+            
+            ForEach(weather.daily.prefix(4), id: \.self) { day in
+                HStack(spacing: 10) {
+                    Text(day.dt.convertToDayOfWeek()) // Convert the timestamp to the day of the week
+                        .font(.system(size: 20))
+                        .fontWeight(.semibold)
+                        .frame(width: 46, alignment: .leading)
+                        .padding(.leading, 17)
+                                                
+
+                    HStack(spacing: 20) {
+                        // Weather Icon
+                        Image(systemName: "cloud")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: 1.0))
                         
-                        HStack(spacing:20) {
-                            Text(item.title)
-                                .font(.system(size:20))
-                                .fontWeight(.semibold)
-                                .frame(width: 46, alignment: .leading)
-                                .padding(.leading, 8)
-                                
-                            
-                            ForEach(item.dayForecast, id: \.self){ dayItem in
-                                HStack(spacing:20){
-                                    Image(systemName: dayItem.mainCondition)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 24, height: 23)
-                                        .foregroundColor(Color(red: 55/255, green: 31/255 , blue: 92/255, opacity: 1.0))
-                                    
-                                    Text("L: \(dayItem.minTemp)")
-                                    Text("H: \(dayItem.maxTemp)")
-                                }
-                                .font(.system(size:20))
-                                .fontWeight(.regular)
-                                .frame(width: 200, alignment: .leading)
-                            }
-
-                            Text("2")
-                                .padding([.trailing, .leading],6)
-                                .font(.system(size:20))
-                                .foregroundColor(.white)
-                                .background(Color(red: 130/255, green:218/255 , blue: 171/255, opacity: 1.0))
-                                .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
-                        }
-                        .padding(12)
-                        .frame(width:353, alignment: .leading)
-                        .overlay(
-                            Rectangle()
-                                .frame(width: 323, height: 3)
-                                .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: item == UpcomingForecast.allCases.last ? 0 : 0.7)),
-                            alignment: .bottom
-                        )
-                        .onTapGesture {
-                            withAnimation {
-                                self.forecast = item
+                        // Temperature Details
+                        Text("L: \(day.temp.min.roundDouble())°C")
+                            .frame(width: 70, alignment: .leading)
+                        Text("H: \(day.temp.max.roundDouble())°C")
                     }
+                    .font(.system(size: 20))
+                    .fontWeight(.regular)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    // good condition activities
+                    ZStack{
+                        Text("2")
+                            .padding(.horizontal, 6)
+                            .font(.system(size:20))
+                            .foregroundColor(Color(red: 43/255, green:58/255 , blue: 84/255, opacity: 1.0))
+                            .background(Color(red: 130/255, green:218/255 , blue: 171/255, opacity: 1.0))
+                            .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
+                            .offset(x:-12)
+                    }
+                    .padding(.trailing,10)
                 }
+                .padding(.vertical, 8)
+                .frame(width: 350, alignment: .leading)
+                .overlay(
+                    Rectangle()
+                        .frame(width: 323, height: 1.5)
+                        .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: day == weather.daily.prefix(4).last ? 0 : 0.4)), alignment: .bottom
+                )
             }
-                    .padding(.bottom, 2.5)
-
         }
-        .background(Color(red:199/255, green:217/255, blue: 244/255, opacity: 1))
+        .background(Color(red:74/255, green:99/255, blue:143/255, opacity:0))
         .cornerRadius(10)
         .frame(maxWidth: .infinity, alignment: .center)
-        
-        
     }
+        
 }
+        
+        
 
-enum WeatherDetail: CaseIterable {
-    case temperature
-    case humidity
-    case precipitation
-    case wind
-    
-    // Function to get the label for each case
-    var label: String {
-        switch self {
-        case .temperature:
-            return "Temperature"
-        case .humidity:
-            return "Humidity"
-        case .precipitation:
-            return "Precipitation"
-        case .wind:
-            return "Wind"
-        }
-    }
-    
-    // Function to get the value for each case from a DayForecast instance
-    func value(from forecast: DayForecast) -> String {
-        switch self {
-        case .temperature:
-            return forecast.temp
-        case .humidity:
-            return forecast.humidity
-        case .wind:
-            return forecast.wind
-        case .precipitation:
-            return forecast.precipitation
-        
-        }
-    }
-}
+

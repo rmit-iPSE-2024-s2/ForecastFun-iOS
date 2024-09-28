@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct HomeView: View {
+    var weather: ResponseBody
+    
     var body: some View {
-        HomeScreen()
+        HomeScreen(weather: weather)
     }
 }
 
@@ -57,7 +59,7 @@ enum TabbedItems: Int, CaseIterable{
         case .pin:
             return "map"
         case .walk:
-            return "figure.walk.circle"
+            return "target"
         case .clock:
             return "calendar"
             
@@ -66,13 +68,14 @@ enum TabbedItems: Int, CaseIterable{
 }
 
 struct MainTabbedView: View {
+    var weather: ResponseBody
     @State var selectedTab = 0
     
     var body: some View {
         
         ZStack (alignment: .bottom){
             TabView(selection: $selectedTab) {
-                HomeView()
+                HomeScreen(weather:weather)
                     .tag(0)
                 PinView()
                     .tag(1)
@@ -97,7 +100,7 @@ struct MainTabbedView: View {
 
             }
             .frame(width:360,height: 65)
-            .background(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0))
+            .background(Color(red: 43/255, green:58/255 , blue: 84/255, opacity: 1.0))
             .cornerRadius(20)
 
         }
@@ -123,5 +126,5 @@ extension MainTabbedView {
 
 
 #Preview {
-    MainTabbedView()
+    MainTabbedView(weather: previewWeather)
 }
