@@ -99,7 +99,7 @@ struct HomeScreen: View {
                                 Image("\(iconName)")
                                     .resizable()
                                     .frame(width: 150, height: 150)
-                                    .padding()
+                                    .padding(.horizontal)
                                             
                                 
                                 VStack{
@@ -114,7 +114,11 @@ struct HomeScreen: View {
                                 }
                                 .padding()
                             }
-                            .padding(.top,20)
+                            .overlay(
+                                Rectangle()
+                                    .frame(width: 323, height: 1.5)
+                                    .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: 0.7)), alignment: .bottom
+                            )
       
                             HStack(spacing:5){
                                 
@@ -154,6 +158,9 @@ struct HomeScreen: View {
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.leading, 40)
+                            .padding(.top, 27)
+                            .padding(.bottom, 6)
+                            
               
                
                         }
@@ -161,10 +168,6 @@ struct HomeScreen: View {
                     
                     else{
                         VStack(spacing: 10){
-//                            Text("4-Day Forecast")
-//                                .frame(maxWidth: .infinity, alignment: .leading)
-//                                .fontWeight(.semibold)
-//                                .padding(.leading, 30)
                             fourDayView(weather: weather)
                         }
                     }
@@ -197,7 +200,6 @@ struct HomeScreen: View {
                             
                         }
                         .frame(height:217)
-//                        .background(.black)
                     }
                     
                 }
@@ -258,9 +260,13 @@ struct ActivityView: View {
 
             }
             .padding(12)
-            .background(Color(red:74/255, green:99/255, blue: 143/255, opacity: 1))
-            .cornerRadius(20)
+            .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+            .cornerRadius(15)
             .frame(width: 230)
+            .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
+            )
             
         }
         
@@ -300,9 +306,14 @@ struct nextScheduledView : View{
                 .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
                 
             }
-            .background(Color(red:74/255, green:99/255, blue: 143/255, opacity: 1))
-            .cornerRadius(20)
+            .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+            .cornerRadius(15)
             .frame(width: 360)
+            .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
+            )
+            
             
             // Add new scheduled activity
             HStack{
@@ -330,9 +341,14 @@ struct nextScheduledView : View{
                 .padding(24)
                 
             }
-            .background(Color(red:74/255, green:99/255, blue: 143/255, opacity: 1))
-            .cornerRadius(20)
             .frame(width: 360)
+            .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+            .cornerRadius(15)
+            .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
+            )
+            
         }
         
         
