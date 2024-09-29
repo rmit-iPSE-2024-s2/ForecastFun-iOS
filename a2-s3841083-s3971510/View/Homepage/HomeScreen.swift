@@ -24,7 +24,6 @@ struct HomeScreen: View {
     @State private var showTodayView: Bool = true
     @State private var forecast: UpcomingForecast? = nil
     var icons = ["precipitation", "24" ,"6", "11"]
-    
     var weather: ResponseBody
     
     var body: some View {
@@ -94,10 +93,12 @@ struct HomeScreen: View {
                         
                             HStack(spacing:10)
                             {
-                                Image("partly-cloudy-day")
+                                let weatherIcon = weather.current.weather.first?.icon ?? "default"
+                                let iconName = getIconName(from: weatherIcon)
+
+                                Image("\(iconName)")
                                     .resizable()
                                     .frame(width: 150, height: 150)
-                                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
                                     .padding()
                                             
                                 
@@ -238,7 +239,7 @@ struct ActivityView: View {
                         .padding(.bottom, 8)
                         .overlay(
                             Rectangle()
-                                .frame(height: 3)
+                                .frame(height: 3.5)
                                 .cornerRadius(10)
                                 .foregroundColor(Color(red: 138/255, green:194/255 , blue: 150/255, opacity: 1.6)) // green color for the border
                                 .padding(.top, 32), // push the border to the bottom, adjust as per view size
@@ -343,6 +344,27 @@ struct nextScheduledView : View{
 struct fourDayView: View {
     var weather: ResponseBody
     
+    func getWeatherIcon(for weatherID: Int) -> String {
+            switch weatherID {
+            case 200...232: // Thunderstorm
+                return "cloud.bolt.rain.fill"
+            case 300...321: // Drizzle
+                return "cloud.drizzle.fill"
+            case 500...531: // Rain
+                return "cloud.rain.fill"
+            case 600...622: // Snow
+                return "snowflake"
+            case 701...781: // Atmosphere (fog, haze, etc.)
+                return "cloud.fog.fill"
+            case 800:       // Clear
+                return "sun.max.fill"
+            case 801...804: // Clouds
+                return "cloud.fill"
+            default:        // Unknown case
+                return "questionmark"
+            }
+        }
+    
     var body: some View{
         VStack {
             Text("4-Day Forecast")
@@ -368,7 +390,7 @@ struct fourDayView: View {
 
                     HStack(spacing: 20) {
                         // Weather Icon
-                        Image(systemName: "cloud")
+                        Image(systemName: getWeatherIcon(for: day.weather.first?.id ?? 0))
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 30, height: 30)
@@ -410,7 +432,30 @@ struct fourDayView: View {
     }
         
 }
-        
-        
+
+func getIconName(from icon: String) -> String {
+    switch icon {
+    case "01d":
+        return "clear-day"
+    case "01n":
+        return "clear-night."
+    case "02d", "03d", "04d":
+        return "cloudy"
+    case "02n", "03n", "04n":
+        return "partly-cloudy-night"
+    case "09d", "10d":
+        return "showers"
+    case "09n", "10n":
+        return "showers"
+    case "11d", "11n":
+        return "thunderstorm-showers"
+    case "13d", "13n":
+        return "snow"
+    case "50d", "50n":
+        return "fog"
+    default:
+        return "cloudy" // In case no match is found
+    }
+}
 
 
