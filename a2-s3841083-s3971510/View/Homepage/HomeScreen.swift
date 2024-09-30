@@ -96,11 +96,10 @@ struct HomeScreen: View {
                                 let weatherIcon = weather.current.weather.first?.icon ?? "default"
                                 let iconName = getIconName(from: weatherIcon)
 
-                                Image("\(iconName)")
+                                Image(iconName)
                                     .resizable()
                                     .frame(width: 150, height: 150)
-                                    .padding(.horizontal)
-                                            
+
                                 
                                 VStack{
                                     let locationName = weather.timezone.split(separator: "/")
@@ -111,9 +110,10 @@ struct HomeScreen: View {
                                         .fontWeight(.thin)
                                     Text("\(state), \(country)")
                                         .font(.system(size:14))
-                                }
-                                .padding()
+                                }.padding(.horizontal)
+                                
                             }
+                            .padding()
                             .overlay(
                                 Rectangle()
                                     .frame(width: 323, height: 1.5)

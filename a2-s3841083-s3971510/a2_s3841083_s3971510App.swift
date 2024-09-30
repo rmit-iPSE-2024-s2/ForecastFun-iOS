@@ -28,5 +28,6 @@ struct a2_s3841083_s3971510App: App {
             SplashScreenView()
         }
         .modelContainer(sharedModelContainer)
+        .modelContainer(for: Activity.self)
     }
 }
