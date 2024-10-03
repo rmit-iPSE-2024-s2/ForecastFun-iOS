@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Activity {
+class Activity: Identifiable {
     var activityId: Int
     var activityName: String
     var humidityRange: [Int]
@@ -17,6 +17,8 @@ class Activity {
     var windRange: [Double]
     var precipRange: [Double]
     var keyword: String
+    var added: Bool
+    var scheduled: Bool
     var temp: Double?
     var humid: Double?
     var wind: Double?
@@ -34,6 +36,8 @@ class Activity {
         windRange: [Double],
         precipRange: [Double],
         keyword: String,
+        added: Bool,
+        scheduled: Bool,
         temp: Double? = nil,
         humid: Double? = nil,
         wind: Double? = nil,
@@ -49,6 +53,8 @@ class Activity {
         self.windRange = windRange
         self.precipRange = precipRange
         self.keyword = keyword
+        self.added = added
+        self.scheduled = scheduled
         self.temp = temp
         self.humid = humid
         self.wind = wind

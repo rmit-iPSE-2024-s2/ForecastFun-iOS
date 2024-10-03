@@ -5,20 +5,34 @@
 //  Created by Anthony Forti on 30/8/2024.
 //
 
+import SwiftData
 import SwiftUI
 
 struct ActivitiesMenu: View {
+    @Environment(\.modelContext) var modelContext
+    @Query var activities: [Activity]
+    
     let images = ["Walking",
                   "running",
                   "Swimming",
                   "Cycling",
                   "Basketball"]
-                  
+       // array.filter(\.added)
+        // array.filter { $0.temp != nil  }
     
     var body: some View {
         ZStack {Color(red: 218/255, green:210/255 , blue: 240/255, opacity: 1.0)
                 .ignoresSafeArea(.all)
             VStack(alignment: .leading) {
+                
+                ForEach(activities.filter { !$0.added }) { activity in
+                    VStack(alignment: .leading) {
+                        Text("Activity ID: \(activity.activityId)")
+                        Text("Activity Name: \(activity.activityName)")
+                        Text("Added: \(activity.added ? "Yes" : "No")")  // Display 'Yes' or 'No'
+                    }
+                }
+                
                 Text("Your Activities")
                     .font(.largeTitle)
                     .fontWeight(.semibold)
@@ -74,9 +88,15 @@ struct ActivitiesMenu: View {
     }
     
     
-    struct ActivitiesMenu_Previews: PreviewProvider {
-        static var previews: some View {
-            ActivitiesMenu()
-        }
+}
+
+#Preview {
+    do {
+        let previewer = try ActivityPreviewer()
+
+        return ActivitiesMenu()
+            .modelContainer(previewer.container)
+    } catch {
+        return Text("Failed to create preview: \(error.localizedDescription)")
     }
 }

@@ -5,17 +5,6 @@
 //  Created by Anthony Forti on 28/8/2024.
 //
 
-let todayForecast = DayForecast(
-    day: "Monday",
-    temp: "22°C",
-    maxTemp: "24°C",
-    minTemp: "20°C",
-    mainCondition: "sun.and.horizon.fill",
-    humidity: "60%",
-    precipitation: "0 mm",
-    wind: "15 km/h"
-)
-
 
 import SwiftUI
 
@@ -85,8 +74,6 @@ struct HomeScreen: View {
 
                         
                     }
-
-
                     
                     if showTodayView{
                         VStack(spacing:0){
@@ -95,7 +82,6 @@ struct HomeScreen: View {
                             {
                                 let weatherIcon = weather.current.weather.first?.icon ?? "default"
                                 let iconName = getIconName(from: weatherIcon)
-
                                 Image(iconName)
                                     .resizable()
                                     .frame(width: 150, height: 150)
@@ -190,7 +176,7 @@ struct HomeScreen: View {
                             }
                         
                         VStack{
-                            Text("Nexy Scheduled Activity")
+                            Text("Next Scheduled Activity")
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 30)
@@ -454,7 +440,7 @@ func getIconName(from icon: String) -> String {
     case "01d":
         return "clear-day"
     case "01n":
-        return "clear-night."
+        return "clear-night"
     case "02d", "03d", "04d":
         return "cloudy"
     case "02n", "03n", "04n":
