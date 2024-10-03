@@ -27,7 +27,6 @@ class Activity: Identifiable {
     var end: Date?
     var location: String?
 
-    // Initializer with default values
     init(
         activityId: Int,
         activityName: String,

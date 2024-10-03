@@ -81,7 +81,6 @@
 		DD47833A2CA06977002317AC /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9291A9C22CAC0B1500F6C872 /* ScheduledActivitiesModel.swift */,
 				924651BC2CA93861007D771B /* Activity.swift */,
 				DD2A16592CAE2E0300F14386 /* ActivityPreviewer.swift */,
 			);
@@ -305,7 +304,6 @@
 				DDB82F6A2C9158E600CF8FBB /* ScheduleActivitySection.swift in Sources */,
 				DD47833F2CA2B430002317AC /* WeatherManager.swift in Sources */,
 				DDB82F6C2C9158E600CF8FBB /* ScheduleView.swift in Sources */,
-				9291A9C32CAC0B1500F6C872 /* ScheduledActivitiesModel.swift in Sources */,
 				DD737EB12CA5383F00EADC4D /* Extensions.swift in Sources */,
 				DDD0BED12C914F2200B967A3 /* Item.swift in Sources */,
 				DDB82F632C9158E600CF8FBB /* TriangleLayout.swift in Sources */,
