@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ScheduleView: View {
     @State private var selectedOption: UpcomingForecast = .Monday
+    @Environment(\.modelContext) var modelContext
+    @Query var activities: [Activity]
     var body: some View {
         ZStack{
             Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0)
@@ -39,5 +42,12 @@ struct ScheduleView: View {
 }
 
 #Preview {
-    ScheduleView()
+    do {
+        let previewer = try ActivityPreviewer()
+
+        return ScheduleView()
+            .modelContainer(previewer.container)
+    } catch {
+        return Text("Failed to create preview: \(error.localizedDescription)")
+    }
 }

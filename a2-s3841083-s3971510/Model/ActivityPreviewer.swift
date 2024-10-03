@@ -54,9 +54,21 @@ struct ActivityPreviewer {
             added: false,
             scheduled: false
         )
+        
+        let bikingAdded = Activity(
+            activityId: 3,
+            activityName: "Biking",
+            humidityRange: [20, 40],
+            temperatureRange: [18.0, 30.0],
+            windRange: [5.0, 15.0],
+            precipRange: [0.0, 0.1],
+            keyword: "outdoor",
+            added: true,
+            scheduled: false
+        )
 
         // Store activities in an array
-        activities = [walkingActivity, runningActivity, bikingActivity]
+        activities = [walkingActivity, runningActivity, bikingActivity, bikingAdded]
 
         // Insert activities into the in-memory context
         for activity in activities {

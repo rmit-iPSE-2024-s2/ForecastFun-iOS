@@ -127,5 +127,12 @@ extension MainTabbedView {
 
 
 #Preview {
-    MainTabbedView(weather: previewWeather)
+    do {
+        let previewer = try ActivityPreviewer()
+
+                return MainTabbedView(weather: previewWeather)
+                    .modelContainer(previewer.container)
+    } catch {
+        return Text("Failed to create preview: \(error.localizedDescription)")
+    }
 }

@@ -7,11 +7,16 @@
 
 
 import SwiftUI
+import SwiftData
 
 struct HomeScreen: View {
+    @Environment(\.modelContext) var modelContext
     @StateObject var locationManager = LocationManager()
     @State private var showTodayView: Bool = true
     @State private var forecast: UpcomingForecast? = nil
+    
+
+    @Query var activities: [Activity]
     var icons = ["precipitation", "24" ,"6", "11"]
     var weather: ResponseBody
     
@@ -77,7 +82,7 @@ struct HomeScreen: View {
                     
                     if showTodayView{
                         VStack(spacing:0){
-                        
+
                             HStack(spacing:10)
                             {
                                 let weatherIcon = weather.current.weather.first?.icon ?? "default"
@@ -168,8 +173,14 @@ struct HomeScreen: View {
                                 ScrollView(.horizontal, showsIndicators: false ){
                                     HStack
                                         {
+                                            
+                                            ForEach(activities.filter { $0.added }, id: \.activityId) { activity in
+
+                                                ActivityView(title:activity.activityName, bgColor: Color(red: 130/255, green:218/255 , blue: 171/255, opacity: 1.0))
+                                            }
                                             ActivityView(title:"Walking", bgColor: Color(red: 130/255, green:218/255 , blue: 171/255, opacity: 1.0))
-                                            ActivityView(title:"Running", bgColor: Color(red: 130/255, green:218/255 , blue: 171/255, opacity: 1.0))
+
+                                            
                                         }
                                         .padding(20)
                                 }
@@ -199,9 +210,16 @@ struct HomeScreen: View {
     
 }
 
-struct HomeScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeScreen(weather: previewWeather)
+
+
+#Preview {
+    do {
+        let previewer = try ActivityPreviewer()
+
+                return HomeScreen(weather: previewWeather)
+                    .modelContainer(previewer.container)
+    } catch {
+        return Text("Failed to create preview: \(error.localizedDescription)")
     }
 }
 
