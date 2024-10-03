@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		924651BD2CA93861007D771B /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924651BC2CA93861007D771B /* Activity.swift */; };
+		9291A9C32CAC0B1500F6C872 /* ScheduledActivitiesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9291A9C22CAC0B1500F6C872 /* ScheduledActivitiesModel.swift */; };
 		DD47833F2CA2B430002317AC /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD47833E2CA2B430002317AC /* WeatherManager.swift */; };
 		DD4783402CA3C770002317AC /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD47833D2CA12E88002317AC /* LocationManager.swift */; };
 		DD4783422CA3E52E002317AC /* StartupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4783412CA3E52E002317AC /* StartupView.swift */; };
@@ -37,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		924651BC2CA93861007D771B /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
+		9291A9C22CAC0B1500F6C872 /* ScheduledActivitiesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledActivitiesModel.swift; sourceTree = "<group>"; };
 		DD47833D2CA12E88002317AC /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		DD47833E2CA2B430002317AC /* WeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
 		DD4783412CA3E52E002317AC /* StartupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupView.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 		DD47833A2CA06977002317AC /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9291A9C22CAC0B1500F6C872 /* ScheduledActivitiesModel.swift */,
 				924651BC2CA93861007D771B /* Activity.swift */,
 			);
 			path = Model;
@@ -300,6 +303,7 @@
 				DDB82F6A2C9158E600CF8FBB /* ScheduleActivitySection.swift in Sources */,
 				DD47833F2CA2B430002317AC /* WeatherManager.swift in Sources */,
 				DDB82F6C2C9158E600CF8FBB /* ScheduleView.swift in Sources */,
+				9291A9C32CAC0B1500F6C872 /* ScheduledActivitiesModel.swift in Sources */,
 				DD737EB12CA5383F00EADC4D /* Extensions.swift in Sources */,
 				DDD0BED12C914F2200B967A3 /* Item.swift in Sources */,
 				DDB82F632C9158E600CF8FBB /* TriangleLayout.swift in Sources */,
