@@ -10,6 +10,8 @@ import SwiftData
 struct ActivitiesView: View {
     @State private var selectedView = "Today"
     @State private var selectedActivity: String? = nil
+    @State private var selectedDay: DayOption = .monday
+    @State private var weatherData: (temperature: String, wind: String, humidity: String, precipitation: String) = ("20°C", "9 km/h", "41%", "0 mm")
     
     @Environment(\.modelContext) private var context
     @Query private var scheduledActivities: [ActivityRecord]
@@ -19,12 +21,20 @@ struct ActivitiesView: View {
         "Hollywood Walk of Fame", "The Grove", "Dodger Stadium", "Malibu Beach", "Los Angeles Zoo"
     ]
     
+    // Define the color scheme for the dark theme
+    let backgroundColor = Color(red: 43/255, green: 58/255, blue: 84/255)
+    let cardBackgroundColor = Color(red: 36/255, green: 50/255, blue: 71/255)
+    let highlightColor = Color.blue
+    let textColor = Color(red: 226/255, green: 237/255, blue: 255/255)
+    
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 15) {
+            // Header Section
             HStack {
                 Text("Activities")
                     .font(.title)
                     .fontWeight(.bold)
+                    .foregroundColor(textColor)
                 
                 Spacer()
                 
@@ -36,50 +46,102 @@ struct ActivitiesView: View {
             }
             .padding(.horizontal)
             
-            VStack {
+            VStack(spacing: 5) {
                 Image(systemName: "cloud.fill")
-                    .font(.system(size: 60))
-                    .padding()
-                Text("20°C")
-                    .font(.largeTitle)
+                    .font(.system(size: 40))
+                    .foregroundColor(textColor)
+                
+                Text(weatherData.temperature)
+                    .font(.title2)
                     .fontWeight(.bold)
+                    .foregroundColor(textColor)
+                
                 Text("Melbourne, Australia")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .font(.caption)
+                    .foregroundColor(textColor.opacity(0.7))
                 
                 Divider()
-                    .padding(.horizontal)
+                    .background(textColor.opacity(0.5))
+                    .padding(.horizontal, 10)
                 
                 HStack {
-                    WeatherDetailView(icon: "wind", label: "9 km/h", value: "Wind")
+                    WeatherDetailView(icon: "wind", label: weatherData.wind, value: "Wind", textColor: textColor)
                     Spacer()
-                    WeatherDetailView(icon: "humidity", label: "41%", value: "Humidity")
+                    WeatherDetailView(icon: "humidity", label: weatherData.humidity, value: "Humidity", textColor: textColor)
                     Spacer()
-                    WeatherDetailView(icon: "drop.fill", label: "0 mm", value: "Precipitation")
+                    WeatherDetailView(icon: "drop.fill", label: weatherData.precipitation, value: "Precipitation", textColor: textColor)
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 10)
             }
-            .padding()
-            .background(Color(.systemGray6))
+            .padding(10)
+            .background(cardBackgroundColor)
             .cornerRadius(15)
             .padding(.horizontal)
+            .onChange(of: selectedDay) { newDay in
+                weatherData = getRandomWeatherData()
+            }
             
+            // Day Picker for scheduling
             VStack(alignment: .leading) {
+                Text("Day")
+                    .font(.headline)
+                    .foregroundColor(textColor)
+                    .padding(.bottom, 5)
+                
+                Picker("Day", selection: $selectedDay) {
+                    ForEach(DayOption.allCases, id: \.self) { day in
+                        Text(day.rawValue).tag(day)
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+                .padding(.horizontal)
+                .background(cardBackgroundColor)
+                .cornerRadius(10)
+            }
+            .padding(.horizontal)
+            
+            VStack(alignment: .leading, spacing: 15) {
                 Text("Activities Now")
                     .font(.headline)
+                    .foregroundColor(textColor)
                     .padding(.bottom, 5)
                 
                 HStack {
-                    ActivityButton(activity: "Biking", condition: "Good Conditions", selectedActivity: $selectedActivity)
+                    ActivityButton(activity: "Cycling", condition: "Good", selectedActivity: $selectedActivity, textColor: textColor, cardBackgroundColor: cardBackgroundColor, highlightColor: highlightColor)
                     Spacer()
-                    ActivityButton(activity: "Walking", condition: "Good Conditions", selectedActivity: $selectedActivity)
+                    ActivityButton(activity: "Yoga", condition: "Warmer", selectedActivity: $selectedActivity, textColor: textColor, cardBackgroundColor: cardBackgroundColor, highlightColor: highlightColor)
                     Spacer()
-                    ActivityButton(activity: "Running", condition: "Moderate Conditions", selectedActivity: $selectedActivity)
+                    ActivityButton(activity: "Basketball", condition: "Warmer", selectedActivity: $selectedActivity, textColor: textColor, cardBackgroundColor: cardBackgroundColor, highlightColor: highlightColor)
+                }
+                
+                Text("This Afternoon")
+                    .font(.headline)
+                    .foregroundColor(textColor)
+                    .padding(.bottom, 5)
+                
+                HStack {
+                    ActivityButton(activity: "Swimming", condition: "Good", selectedActivity: $selectedActivity, textColor: textColor, cardBackgroundColor: cardBackgroundColor, highlightColor: highlightColor)
+                    Spacer()
+                    ActivityButton(activity: "Sprinting", condition: "Warmer", selectedActivity: $selectedActivity, textColor: textColor, cardBackgroundColor: cardBackgroundColor, highlightColor: highlightColor)
+                    Spacer()
+                    ActivityButton(activity: "Kayaking", condition: "Warmer", selectedActivity: $selectedActivity, textColor: textColor, cardBackgroundColor: cardBackgroundColor, highlightColor: highlightColor)
+                }
+                
+                Text("This Evening")
+                    .font(.headline)
+                    .foregroundColor(textColor)
+                    .padding(.bottom, 5)
+                
+                HStack {
+                    ActivityButton(activity: "HIIT", condition: "Colder", selectedActivity: $selectedActivity, textColor: textColor, cardBackgroundColor: cardBackgroundColor, highlightColor: highlightColor)
+                    Spacer()
+                    ActivityButton(activity: "Jogging", condition: "Colder", selectedActivity: $selectedActivity, textColor: textColor, cardBackgroundColor: cardBackgroundColor, highlightColor: highlightColor)
+                    Spacer()
+                    ActivityButton(activity: "Soccer", condition: "Colder", selectedActivity: $selectedActivity, textColor: textColor, cardBackgroundColor: cardBackgroundColor, highlightColor: highlightColor)
                 }
             }
             .padding(.horizontal)
             
-        
             Button(action: addActivity) {
                 HStack {
                     Image(systemName: "plus.circle.fill")
@@ -88,55 +150,27 @@ struct ActivitiesView: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(selectedActivity != nil ? Color.blue : Color.gray)
-                .foregroundColor(.white)
+                .background(selectedActivity != nil ? highlightColor : Color.gray)
+                .foregroundColor(backgroundColor)
                 .cornerRadius(15)
                 .padding(.horizontal)
             }
             .disabled(selectedActivity == nil)
             
-            VStack(alignment: .leading) {
-                Text("Next Scheduled Activity")
-                    .font(.headline)
-                    .padding(.bottom, 5)
-                
-                if let scheduledActivity = scheduledActivities.first {
-                    HStack {
-                        ScheduledActivityView(day: scheduledActivity.day, time: scheduledActivity.time, activity: "\(scheduledActivity.activityName) @ \(scheduledActivity.location)", condition: "Good Conditions")
-                        
-                        Spacer()
-                        
-                        // Remove Button
-                        Button(action: {
-                            removeActivity(scheduledActivity)
-                        }) {
-                            Image(systemName: "minus.circle.fill")
-                                .foregroundColor(.red)
-                                .font(.title2)
-                        }
-                        .buttonStyle(BorderlessButtonStyle())
-                    }
-                } else {
-                    Text("No activities scheduled")
-                        .foregroundColor(.gray)
-                        .padding(.leading)
-                }
-            }
-            .padding(.horizontal)
-            
             Spacer()
         }
         .padding(.vertical)
+        .background(backgroundColor.ignoresSafeArea())
     }
     
     private func addActivity() {
-        for activity in scheduledActivities {
+        for activity in scheduledActivities.filter({ $0.day == selectedDay.rawValue }) {
             context.delete(activity)
         }
         
         if let activity = selectedActivity {
             let location = locations.randomElement() ?? "Unknown Location"
-            let newActivity = ActivityRecord(activityName: activity, location: location, day: "TODAY", time: "7 AM")
+            let newActivity = ActivityRecord(activityName: activity, location: location, day: selectedDay.rawValue, time: "7 AM")
             
             context.insert(newActivity)
             
@@ -147,23 +181,39 @@ struct ActivitiesView: View {
     private func removeActivity(_ activity: ActivityRecord) {
         context.delete(activity)
     }
+    
+    private func getRandomWeatherData() -> (String, String, String, String) {
+        let temperatures = ["18°C", "20°C", "22°C", "25°C", "28°C"]
+        let winds = ["5 km/h", "10 km/h", "15 km/h", "20 km/h"]
+        let humidities = ["40%", "50%", "60%", "70%"]
+        let precipitations = ["0 mm", "2 mm", "5 mm", "8 mm"]
+        
+        return (
+            temperatures.randomElement() ?? "20°C",
+            winds.randomElement() ?? "9 km/h",
+            humidities.randomElement() ?? "41%",
+            precipitations.randomElement() ?? "0 mm"
+        )
+    }
 }
 
 struct WeatherDetailView: View {
     var icon: String
     var label: String
     var value: String
+    var textColor: Color
     
     var body: some View {
         VStack {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundColor(.blue)
+                .foregroundColor(textColor)
             Text(label)
                 .fontWeight(.bold)
+                .foregroundColor(textColor)
             Text(value)
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundColor(textColor.opacity(0.7))
         }
     }
 }
@@ -172,6 +222,9 @@ struct ActivityButton: View {
     var activity: String
     var condition: String
     @Binding var selectedActivity: String?
+    var textColor: Color
+    var cardBackgroundColor: Color
+    var highlightColor: Color
     
     var body: some View {
         VStack {
@@ -179,55 +232,20 @@ struct ActivityButton: View {
                 .fontWeight(.bold)
             Text(condition)
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundColor(textColor.opacity(0.7))
         }
         .padding()
-        .frame(width: 120, height: 60)
-        .background(selectedActivity == activity ? Color.blue : Color(.systemGray6))
+        .frame(width: 110, height: 50)
+        .background(selectedActivity == activity ? highlightColor : cardBackgroundColor)
         .cornerRadius(10)
-        .foregroundColor(selectedActivity == activity ? .white : .primary)
+        .foregroundColor(selectedActivity == activity ? Color(red: 43/255, green: 58/255, blue: 84/255) : textColor)
         .onTapGesture {
-            // Toggle selection
             if selectedActivity == activity {
-                selectedActivity = nil // Deselect if already selected
+                selectedActivity = nil
             } else {
-                selectedActivity = activity // Select the activity
+                selectedActivity = activity
             }
         }
-    }
-}
-
-struct ScheduledActivityView: View {
-    var day: String
-    var time: String
-    var activity: String
-    var condition: String
-    
-    var body: some View {
-        HStack {
-            VStack {
-                Text(day)
-                    .font(.headline)
-                    .fontWeight(.bold)
-                Text(time)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-            }
-            .padding(.trailing)
-            
-            VStack(alignment: .leading) {
-                Text(activity)
-                    .fontWeight(.bold)
-                Text(condition)
-                    .font(.caption)
-                    .foregroundColor(.gray)
-            }
-            
-            Spacer()
-        }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(15)
     }
 }
 
