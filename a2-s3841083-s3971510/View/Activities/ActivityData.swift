@@ -6,7 +6,6 @@
 //
 
 import SwiftData
-import Foundation
 
 @Model
 class ActivityRecord: Identifiable {

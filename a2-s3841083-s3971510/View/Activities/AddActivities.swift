@@ -12,7 +12,7 @@ struct ActivitiesView: View {
     @State private var selectedActivity: String? = nil
     
     @Environment(\.modelContext) private var context
-    @Query private var scheduledActivities: [ActivityRecord] // Querying scheduled activities
+    @Query private var scheduledActivities: [ActivityRecord]
     
     let locations = [
         "Griffith Park", "Venice Beach", "Echo Park", "Santa Monica Pier", "Runyon Canyon",
@@ -21,7 +21,6 @@ struct ActivitiesView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            // Header with "Activities" title and "Today" segmented tab
             HStack {
                 Text("Activities")
                     .font(.title)
@@ -37,7 +36,6 @@ struct ActivitiesView: View {
             }
             .padding(.horizontal)
             
-            // Weather Information
             VStack {
                 Image(systemName: "cloud.fill")
                     .font(.system(size: 60))
@@ -52,7 +50,6 @@ struct ActivitiesView: View {
                 Divider()
                     .padding(.horizontal)
                 
-                // Weather Details
                 HStack {
                     WeatherDetailView(icon: "wind", label: "9 km/h", value: "Wind")
                     Spacer()
@@ -67,7 +64,6 @@ struct ActivitiesView: View {
             .cornerRadius(15)
             .padding(.horizontal)
             
-            // Activities Now
             VStack(alignment: .leading) {
                 Text("Activities Now")
                     .font(.headline)
@@ -83,7 +79,7 @@ struct ActivitiesView: View {
             }
             .padding(.horizontal)
             
-            // Add Activity to Schedule Button moved above Next Scheduled Activity
+        
             Button(action: addActivity) {
                 HStack {
                     Image(systemName: "plus.circle.fill")
@@ -99,7 +95,6 @@ struct ActivitiesView: View {
             }
             .disabled(selectedActivity == nil)
             
-            // Next Scheduled Activity Section
             VStack(alignment: .leading) {
                 Text("Next Scheduled Activity")
                     .font(.headline)
@@ -119,7 +114,7 @@ struct ActivitiesView: View {
                                 .foregroundColor(.red)
                                 .font(.title2)
                         }
-                        .buttonStyle(BorderlessButtonStyle()) // Ensure the button doesn't interfere with row selections
+                        .buttonStyle(BorderlessButtonStyle())
                     }
                 } else {
                     Text("No activities scheduled")
@@ -135,7 +130,6 @@ struct ActivitiesView: View {
     }
     
     private func addActivity() {
-        // Remove existing scheduled activities
         for activity in scheduledActivities {
             context.delete(activity)
         }
@@ -144,9 +138,9 @@ struct ActivitiesView: View {
             let location = locations.randomElement() ?? "Unknown Location"
             let newActivity = ActivityRecord(activityName: activity, location: location, day: "TODAY", time: "7 AM")
             
-            context.insert(newActivity) // Save the new activity to SwiftData context
+            context.insert(newActivity)
             
-            selectedActivity = nil // Clear selected activity after scheduling
+            selectedActivity = nil
         }
     }
     
@@ -155,7 +149,6 @@ struct ActivitiesView: View {
     }
 }
 
-// Subview for Weather Details
 struct WeatherDetailView: View {
     var icon: String
     var label: String
@@ -175,7 +168,6 @@ struct WeatherDetailView: View {
     }
 }
 
-// Subview for Activity Buttons
 struct ActivityButton: View {
     var activity: String
     var condition: String
@@ -205,7 +197,6 @@ struct ActivityButton: View {
     }
 }
 
-// Subview for Scheduled Activity
 struct ScheduledActivityView: View {
     var day: String
     var time: String

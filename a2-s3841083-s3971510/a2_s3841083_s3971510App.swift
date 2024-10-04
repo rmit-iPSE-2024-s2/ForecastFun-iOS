@@ -13,7 +13,8 @@ struct a2_s3841083_s3971510App: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
-            Activity.self
+            Activity.self,
+            ActivityRecord.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -27,8 +28,7 @@ struct a2_s3841083_s3971510App: App {
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
+                .modelContainer(sharedModelContainer)
         }
-        .modelContainer(sharedModelContainer)
-        .modelContainer(for: Activity.self)
     }
 }
