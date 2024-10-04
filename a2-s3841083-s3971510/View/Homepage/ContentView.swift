@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  A1
-//
-//  Created by Anthony Forti on 28/8/2024.
-//
-
 import SwiftUI
 import SwiftData
 
@@ -23,8 +16,10 @@ struct PinView: View {
 }
 
 struct WalkView: View {
+    @Environment(\.modelContext) private var context // Required for ActivitiesView to work with SwiftData
+    
     var body: some View {
-        ActivitiesMenu()
+        ActivitiesView()
     }
 }
 
@@ -34,13 +29,13 @@ struct ClockView: View {
     }
 }
 
-enum TabbedItems: Int, CaseIterable{
+enum TabbedItems: Int, CaseIterable {
     case home = 0
     case pin
     case walk
     case clock
     
-    var title: String{
+    var title: String {
         switch self {
         case .home:
             return "Home"
@@ -48,12 +43,12 @@ enum TabbedItems: Int, CaseIterable{
             return "Discover"
         case .walk:
             return "Activities"
-        case.clock:
+        case .clock:
             return "Schedule"
         }
     }
     
-    var iconName: String{
+    var iconName: String {
         switch self {
         case .home:
             return "house"
@@ -63,7 +58,6 @@ enum TabbedItems: Int, CaseIterable{
             return "target"
         case .clock:
             return "calendar"
-            
         }
     }
 }
@@ -73,65 +67,57 @@ struct MainTabbedView: View {
     @State var selectedTab = 0
     
     var body: some View {
-        
-        ZStack (alignment: .bottom){
+        ZStack (alignment: .bottom) {
             TabView(selection: $selectedTab) {
-                HomeScreen(weather:weather)
+                HomeScreen(weather: weather)
                     .tag(0)
                 PinView()
                     .tag(1)
-                WalkView()
+                WalkView() 
                     .tag(2)
                 ClockView()
                     .tag(3)
-                
-                
             }
-            ZStack{
-                HStack{
-                    ForEach((TabbedItems.allCases), id: \.self){item in
-                        Button{
+            ZStack {
+                HStack {
+                    ForEach((TabbedItems.allCases), id: \.self) { item in
+                        Button {
                             selectedTab = item.rawValue
                         } label: {
                             CustomTabItem(imageName: item.iconName, isActive: (selectedTab == item.rawValue))
                         }
-                        }
+                    }
                 }
                 .padding(6)
-
             }
-            .frame(width:360,height: 65)
-            .background(Color(red: 43/255, green:58/255 , blue: 84/255, opacity: 1.0))
+            .frame(width: 360, height: 65)
+            .background(Color(red: 43/255, green: 58/255, blue: 84/255, opacity: 1.0))
             .cornerRadius(20)
-
         }
     }
 }
 
-
-
 extension MainTabbedView {
     func CustomTabItem(imageName: String, isActive: Bool) -> some View {
-        HStack{
+        HStack {
             Spacer()
-            Image(systemName:imageName)
+            Image(systemName: imageName)
                 .resizable()
                 .renderingMode(.template)
-                .frame(width:30, height:30)
-                .foregroundColor(isActive ? Color(red:226/255, green:237/255, blue: 255/255, opacity: 1) : Color(red:226/255, green:237/255, blue: 255/255, opacity: 0.4))
+                .frame(width: 30, height: 30)
+                .foregroundColor(isActive ? Color(red: 226/255, green: 237/255, blue: 255/255, opacity: 1) : Color(red: 226/255, green: 237/255, blue: 255/255, opacity: 0.4))
             Spacer()
         }
         .cornerRadius(30)
     }
 }
 
-
 #Preview {
     do {
         let previewer = try ActivityPreviewer()
 
-                return MainTabbedView(weather: previewWeather)
-                    .modelContainer(previewer.container)
+        return MainTabbedView(weather: previewWeather)
+            .modelContainer(previewer.container)
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
     }

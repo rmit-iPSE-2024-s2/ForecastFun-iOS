@@ -474,7 +474,7 @@ func getIconName(from icon: String) -> String {
     case "50d", "50n":
         return "fog"
     default:
-        return "cloudy" // In case no match is found
+        return "cloudy" 
     }
 }
 

@@ -17,8 +17,7 @@ struct ActivitiesMenu: View {
                   "Swimming",
                   "Cycling",
                   "Basketball"]
-       // array.filter(\.added)
-        // array.filter { $0.temp != nil  }
+
     
     var body: some View {
         ZStack {Color(red: 218/255, green:210/255 , blue: 240/255, opacity: 1.0)
@@ -29,7 +28,7 @@ struct ActivitiesMenu: View {
                     VStack(alignment: .leading) {
                         Text("Activity ID: \(activity.activityId)")
                         Text("Activity Name: \(activity.activityName)")
-                        Text("Added: \(activity.added ? "Yes" : "No")")  // Display 'Yes' or 'No'
+                        Text("Added: \(activity.added ? "Yes" : "No")")
                     }
                 }
                 

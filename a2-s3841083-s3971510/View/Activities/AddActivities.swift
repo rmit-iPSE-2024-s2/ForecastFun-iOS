@@ -1,3 +1,9 @@
+//
+//  ActivityData.swift
+//  a2-s3841083-s3971510
+//
+//  Created by Anthony Forti on 4/10/2024.
+//
 import SwiftUI
 import SwiftData
 
@@ -6,7 +12,7 @@ struct ActivitiesView: View {
     @State private var selectedActivity: String? = nil
     
     @Environment(\.modelContext) private var context
-    @Query private var scheduledActivities: [ActivityRecord]
+    @Query private var scheduledActivities: [ActivityRecord] // Querying scheduled activities
     
     let locations = [
         "Griffith Park", "Venice Beach", "Echo Park", "Santa Monica Pier", "Runyon Canyon",
@@ -71,29 +77,13 @@ struct ActivitiesView: View {
                     ActivityButton(activity: "Biking", condition: "Good Conditions", selectedActivity: $selectedActivity)
                     Spacer()
                     ActivityButton(activity: "Walking", condition: "Good Conditions", selectedActivity: $selectedActivity)
+                    Spacer()
+                    ActivityButton(activity: "Running", condition: "Moderate Conditions", selectedActivity: $selectedActivity)
                 }
             }
             .padding(.horizontal)
             
-            // Scheduled Activity (Added after button click)
-            VStack(alignment: .leading) {
-                Text("Next Scheduled Activity")
-                    .font(.headline)
-                    .padding(.bottom, 5)
-                
-                if let scheduledActivity = scheduledActivities.first {
-                    ScheduledActivityView(day: scheduledActivity.day, time: scheduledActivity.time, activity: "\(scheduledActivity.activityName) @ \(scheduledActivity.location)", condition: "Good Conditions")
-                } else {
-                    Text("No activities scheduled")
-                        .foregroundColor(.gray)
-                        .padding(.leading)
-                }
-            }
-            .padding(.horizontal)
-            
-            Spacer()
-            
-            // Add Activity to Schedule Button
+            // Add Activity to Schedule Button moved above Next Scheduled Activity
             Button(action: addActivity) {
                 HStack {
                     Image(systemName: "plus.circle.fill")
@@ -108,11 +98,48 @@ struct ActivitiesView: View {
                 .padding(.horizontal)
             }
             .disabled(selectedActivity == nil)
+            
+            // Next Scheduled Activity Section
+            VStack(alignment: .leading) {
+                Text("Next Scheduled Activity")
+                    .font(.headline)
+                    .padding(.bottom, 5)
+                
+                if let scheduledActivity = scheduledActivities.first {
+                    HStack {
+                        ScheduledActivityView(day: scheduledActivity.day, time: scheduledActivity.time, activity: "\(scheduledActivity.activityName) @ \(scheduledActivity.location)", condition: "Good Conditions")
+                        
+                        Spacer()
+                        
+                        // Remove Button
+                        Button(action: {
+                            removeActivity(scheduledActivity)
+                        }) {
+                            Image(systemName: "minus.circle.fill")
+                                .foregroundColor(.red)
+                                .font(.title2)
+                        }
+                        .buttonStyle(BorderlessButtonStyle()) // Ensure the button doesn't interfere with row selections
+                    }
+                } else {
+                    Text("No activities scheduled")
+                        .foregroundColor(.gray)
+                        .padding(.leading)
+                }
+            }
+            .padding(.horizontal)
+            
+            Spacer()
         }
         .padding(.vertical)
     }
     
     private func addActivity() {
+        // Remove existing scheduled activities
+        for activity in scheduledActivities {
+            context.delete(activity)
+        }
+        
         if let activity = selectedActivity {
             let location = locations.randomElement() ?? "Unknown Location"
             let newActivity = ActivityRecord(activityName: activity, location: location, day: "TODAY", time: "7 AM")
@@ -121,6 +148,10 @@ struct ActivitiesView: View {
             
             selectedActivity = nil // Clear selected activity after scheduling
         }
+    }
+    
+    private func removeActivity(_ activity: ActivityRecord) {
+        context.delete(activity)
     }
 }
 
@@ -164,7 +195,12 @@ struct ActivityButton: View {
         .cornerRadius(10)
         .foregroundColor(selectedActivity == activity ? .white : .primary)
         .onTapGesture {
-            selectedActivity = selectedActivity == activity ? nil : activity
+            // Toggle selection
+            if selectedActivity == activity {
+                selectedActivity = nil // Deselect if already selected
+            } else {
+                selectedActivity = activity // Select the activity
+            }
         }
     }
 }

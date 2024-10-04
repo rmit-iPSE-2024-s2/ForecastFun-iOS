@@ -18,7 +18,7 @@ struct RecActivityView: View {
             
             
             ZStack {
-                // Your other UI components
+               
                 
                 
                 VStack{
