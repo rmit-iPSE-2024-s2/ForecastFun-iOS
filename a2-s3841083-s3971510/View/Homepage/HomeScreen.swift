@@ -14,15 +14,17 @@ struct HomeScreen: View {
     @StateObject var locationManager = LocationManager()
     @State private var showTodayView: Bool = true
     @State private var forecast: UpcomingForecast? = nil
-    
 
-    @Query var activities: [Activity]
-    var icons = ["precipitation", "24" ,"6", "11"]
+    var activities: [Activity]
+
     var weather: ResponseBody
+    private var firstDailyDt: Int {
+        return weather.daily.first?.dt ?? 0
+    }
     
     var body: some View {
         NavigationView{
-
+            
             
             ZStack{
                 Color(red: 43/255, green:58/255 , blue: 84/255, opacity: 1.0)
@@ -32,7 +34,6 @@ struct HomeScreen: View {
                     
                     VStack(){
                         HStack{
-                            
                             HStack{
                                 Button(action: {
                                     withAnimation(.spring()) {
@@ -46,12 +47,12 @@ struct HomeScreen: View {
                                         .resizable()
                                         .frame(width: 15, height: 15)
                                 }
-
+                                
                                 Text("Today")
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                }
-                                .padding(.leading, 65)
-
+                            }
+                            .padding(.leading, 65)
+                            
                             HStack{
                                 Button(action: {
                                     withAnimation(.spring()) {
@@ -65,24 +66,22 @@ struct HomeScreen: View {
                                         .resizable()
                                         .frame(width:15, height:15)
                                 }
-
-                                    
-                                    
+                                
+                                
+                                
                                 Text("4-Day View")
-             
-
+                                
+                                
                             }
                             .padding(.horizontal, 40)
                             
                         }
                         
-
-                        
                     }
                     
                     if showTodayView{
                         VStack(spacing:0){
-
+                            
                             HStack(spacing:10)
                             {
                                 let weatherIcon = weather.current.weather.first?.icon ?? "default"
@@ -90,7 +89,7 @@ struct HomeScreen: View {
                                 Image(iconName)
                                     .resizable()
                                     .frame(width: 150, height: 150)
-
+                                
                                 
                                 VStack{
                                     let locationName = weather.timezone.split(separator: "/")
@@ -110,7 +109,7 @@ struct HomeScreen: View {
                                     .frame(width: 323, height: 1.5)
                                     .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: 0.7)), alignment: .bottom
                             )
-      
+                            
                             HStack(spacing:5){
                                 
                                 VStack{
@@ -119,7 +118,7 @@ struct HomeScreen: View {
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .font(.system(size:20))
                                     
-                                Text("Wind")
+                                    Text("Wind")
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .font(.system(size:15))
                                 }
@@ -140,51 +139,110 @@ struct HomeScreen: View {
                                         .fontWeight(.semibold)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .font(.system(size:20))
-                                        
-                                Text("Precipitation")
+                                    
+                                    Text("Precipitation")
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .font(.system(size:15))
                                 }
-
+                                
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.leading, 40)
                             .padding(.top, 27)
                             .padding(.bottom, 6)
                             
-              
-               
+                            
+                            
                         }
                     }
                     
                     else{
                         VStack(spacing: 10){
-                            fourDayView(weather: weather)
+                            if let activity = activities.first {
+                                fourDayView(weather: weather, activities: activities.filter { $0.added }, activity: activity)
+                            }
+
+
                         }
                     }
                     
                     VStack(spacing:-2){
                         VStack(spacing:-12)
-                            {
-                                Text("Activities Now")
-                                    .fontWeight(.semibold)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.horizontal, 30)
-                                ScrollView(.horizontal, showsIndicators: false ){
-                                    HStack
-                                        {
-                                            
-                                            ForEach(activities.filter { $0.added }, id: \.activityId) { activity in
-
-                                                ActivityView(title:activity.activityName, bgColor: Color(red: 130/255, green:218/255 , blue: 171/255, opacity: 1.0))
+                        {
+                            Text("Activities Today")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 30)
+                            ScrollView(.horizontal, showsIndicators: false ){
+                                
+                                HStack {
+                                    if activities.filter({ $0.added }).isEmpty {
+                                        HStack{
+                                            VStack(alignment: .leading, spacing: 5){
+                                                Text("No Liked Activities")
+                                                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                                                    .font(.headline)
+                                                Text("Please add an acitivity")
+                                                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.7))
+                                                    .font(.headline)
                                             }
-                                            ActivityView(title:"Walking", bgColor: Color(red: 130/255, green:218/255 , blue: 171/255, opacity: 1.0))
-
+                                            Spacer()
                                             
                                         }
-                                        .padding(20)
+                                        .frame(width: 225, height: 55)
+                                        .padding()
+                                        .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+                                        .cornerRadius(15)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
+                                        )
+                                        
+                                        HStack{
+                                            Image(systemName: "plus.square")
+                                                .font(.system(size: 30))
+                                                .fontWeight(.light)
+                                                .opacity(0.9)
+                                        }
+                                        .frame(width: 60, height: 55)
+                                        .padding()
+                                        .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+                                        .cornerRadius(15)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1))
+                                            
+                                    } else {
+                                        ForEach(activities.filter { $0.added }, id: \.activityId) { activity in
+                                            ActivityView(
+                                                activities: activities.filter { $0.added }, // This could be optimized depending on your use case
+                                                activity: activity,
+                                                weather: weather,
+                                                weatherDate: firstDailyDt
+                                            )
+
+                                            
+                                            
+                                        }
+                                        
+                                        HStack{
+                                            Image(systemName: "plus.square")
+                                                .font(.system(size: 30))
+                                                .fontWeight(.thin)
+                                                .opacity(0.9)
+                                        }
+                                        .frame(width: 60, height: 55)
+                                        .padding()
+                                        .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+                                        .cornerRadius(15)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1))
+                                    }
                                 }
+                                .padding(20)
                             }
+                        }
                         
                         VStack{
                             Text("Next Scheduled Activity")
@@ -192,7 +250,7 @@ struct HomeScreen: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 30)
                             nextScheduledView()
-
+                            
                             Spacer()
                             
                         }
@@ -203,7 +261,7 @@ struct HomeScreen: View {
                 .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
             }
             
-
+            
             
         }
     }
@@ -215,68 +273,13 @@ struct HomeScreen: View {
 #Preview {
     do {
         let previewer = try ActivityPreviewer()
-
-                return HomeScreen(weather: previewWeather)
-                    .modelContainer(previewer.container)
+        
+        return HomeScreen(activities: activities, weather: previewWeather)
+            .modelContainer(previewer.container)
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
     }
 }
-
-struct ActivityView: View {
-    var title: String
-    var bgColor: Color
-
-    var body: some View {
-        VStack{
-            VStack(spacing:5){
-                    HStack {
-                        
-                            Text(title)                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .font(.system(size:22))
-                                                        
-                            NavigationLink(destination:RecActivityView()){
-                            Image(systemName: "arrow.forward.circle")
-                                .resizable()
-                                .frame(width:20, height:20)
-                            }
-                        
-                        }
-                        .padding(.bottom, 8)
-                        .overlay(
-                            Rectangle()
-                                .frame(height: 3.5)
-                                .cornerRadius(10)
-                                .foregroundColor(Color(red: 138/255, green:194/255 , blue: 150/255, opacity: 1.6)) // green color for the border
-                                .padding(.top, 32), // push the border to the bottom, adjust as per view size
-                            alignment: .bottom // align overlay to the bottom
-                        )
-                        .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
-                    
-                ZStack {
-                    Text("Good Conditions")
-                        .font(.system(size:15))
-                }
-                .padding(.bottom, 3)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .cornerRadius(6)
-                
-
-            }
-            .padding(12)
-            .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
-            .cornerRadius(15)
-            .frame(width: 230)
-            .overlay(
-                RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
-            )
-            
-        }
-        
-    }
-}
-
 
 struct nextScheduledView : View{
     var body: some View{
@@ -323,22 +326,19 @@ struct nextScheduledView : View{
             HStack{
                 
                 HStack{
-                Image(systemName :"calendar")
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                    
-                    
-                
+                    Image(systemName :"calendar")
+                        .resizable()
+                        .frame(width: 40, height: 40)
 
-                Text("New Scheduled Activity")
-                    .fontWeight(.bold)
-                    .padding(.horizontal, 15)
-                    .font(.system(size:17.5))
-                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
-                
-                Image(systemName :"arrow.forward.circle")
-                    .resizable()
-                    .frame(width: 25, height: 25)
+                    Text("New Scheduled Activity")
+                        .fontWeight(.bold)
+                        .padding(.horizontal, 15)
+                        .font(.system(size:17.5))
+                        .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                    
+                    Image(systemName :"arrow.forward.circle")
+                        .resizable()
+                        .frame(width: 25, height: 25)
                     
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -363,30 +363,35 @@ struct nextScheduledView : View{
 
 struct fourDayView: View {
     var weather: ResponseBody
+    var activities: [Activity]
+    var activity: Activity
+    @State private var dayPopover = false
+    @State private var activePopoverDay: Int? = nil
+    @State private var showAlert = false
     
     func getWeatherIcon(for weatherID: Int) -> String {
-            switch weatherID {
-            case 200...232: // Thunderstorm
-                return "cloud.bolt.rain.fill"
-            case 300...321: // Drizzle
-                return "cloud.drizzle.fill"
-            case 500...531: // Rain
-                return "cloud.rain.fill"
-            case 600...622: // Snow
-                return "snowflake"
-            case 701...781: // Atmosphere (fog, haze, etc.)
-                return "cloud.fog.fill"
-            case 800:       // Clear
-                return "sun.max.fill"
-            case 801...804: // Clouds
-                return "cloud.fill"
-            default:        // Unknown case
-                return "questionmark"
-            }
+        switch weatherID {
+        case 200...232: // Thunderstorm
+            return "cloud.bolt.rain.fill"
+        case 300...321: // Drizzle
+            return "cloud.drizzle.fill"
+        case 500...531: // Rain
+            return "cloud.rain.fill"
+        case 600...622: // Snow
+            return "snowflake"
+        case 701...781: // Atmosphere (fog, haze, etc.)
+            return "cloud.fog.fill"
+        case 800:       // Clear
+            return "sun.max.fill"
+        case 801...804: // Clouds
+            return "cloud.fill"
+        default:        // Unknown case
+            return "questionmark"
         }
+    }
     
     var body: some View{
-        VStack {
+        VStack(spacing: 3) {
             Text("4-Day Forecast")
                 .padding()
                 .padding(.bottom, -5)
@@ -401,13 +406,21 @@ struct fourDayView: View {
             
             ForEach(weather.daily.prefix(4), id: \.self) { day in
                 HStack(spacing: 10) {
+                    Rectangle()
+                        .frame(width: 4, height: 24)
+                        .foregroundColor(.green)
+                        .opacity(0.7)
+                        .padding(.leading, 17)
+
+
+                    
                     Text(day.dt.convertToDayOfWeek()) // Convert the timestamp to the day of the week
                         .font(.system(size: 20))
                         .fontWeight(.semibold)
                         .frame(width: 46, alignment: .leading)
-                        .padding(.leading, 17)
-                                                
-
+                        
+                    
+                    
                     HStack(spacing: 20) {
                         // Weather Icon
                         Image(systemName: getWeatherIcon(for: day.weather.first?.id ?? 0))
@@ -424,33 +437,51 @@ struct fourDayView: View {
                     .font(.system(size: 20))
                     .fontWeight(.regular)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    // good condition activities
-                    ZStack{
-                        Text("2")
-                            .padding(.horizontal, 6)
-                            .font(.system(size:20))
-                            .foregroundColor(Color(red: 43/255, green:58/255 , blue: 84/255, opacity: 1.0))
-                            .background(Color(red: 130/255, green:218/255 , blue: 171/255, opacity: 1.0))
-                            .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
-                            .offset(x:-12)
+
+                    Button(action: {
+                        if activities.filter({ $0.added }).isEmpty {
+                            // Show alert if there are no added activities
+                            showAlert = true
+                        } else {
+                            // Set the active popover day if activities are present
+                            activePopoverDay = day.dt
+                        }
+                    }) {
+                        Image(systemName: "arrow.forward.circle")
+                            .resizable()
+                            .frame(width: 20, height: 20)
                     }
-                    .padding(.trailing,10)
+                    .popover(isPresented: Binding(
+                        get: { activePopoverDay == day.dt }, // Show if activePopoverDay matches this day's dt
+                        set: { if !$0 { activePopoverDay = nil } } // Dismiss by setting nil
+                    )) {
+                        PreviewConditionView(activities: activities, activity: activity, weather: weather, weatherDate:day.dt)
+                    }
+                    .padding(.trailing, 20)
+                    
+                    
                 }
                 .padding(.vertical, 8)
                 .frame(width: 350, alignment: .leading)
-                .overlay(
-                    Rectangle()
-                        .frame(width: 323, height: 1.5)
-                        .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: day == weather.daily.prefix(4).last ? 0 : 0.4)), alignment: .bottom
-                )
+
+                Rectangle()
+                    .frame(width: 323, height: 1.5)
+                    .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: day == weather.daily.prefix(4).last ? 0 : 0.4))
             }
+            
         }
         .background(Color(red:74/255, green:99/255, blue:143/255, opacity:0))
         .cornerRadius(10)
         .frame(maxWidth: .infinity, alignment: .center)
+        .alert(isPresented: $showAlert) {
+                    Alert(
+                        title: Text("No Liked Activities"),
+                        message: Text("You don't have any liked activities to view the conditions"),
+                        dismissButton: .default(Text("OK"))
+                    )
+        }
     }
-        
+    
 }
 
 func getIconName(from icon: String) -> String {
@@ -474,8 +505,9 @@ func getIconName(from icon: String) -> String {
     case "50d", "50n":
         return "fog"
     default:
-        return "cloudy" 
+        return "cloudy"
     }
 }
 
 
+// create a day 

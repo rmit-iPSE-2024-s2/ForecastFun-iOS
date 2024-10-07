@@ -5,7 +5,7 @@ struct HomeView: View {
     var weather: ResponseBody
     
     var body: some View {
-        HomeScreen(weather: weather)
+        HomeScreen(activities: activities, weather: weather )
     }
 }
 
@@ -64,16 +64,17 @@ enum TabbedItems: Int, CaseIterable {
 
 struct MainTabbedView: View {
     var weather: ResponseBody
+    var activities: [Activity]
     @State var selectedTab = 0
     
     var body: some View {
         ZStack (alignment: .bottom) {
             TabView(selection: $selectedTab) {
-                HomeScreen(weather: weather)
+                HomeScreen(activities: activities, weather: weather)
                     .tag(0)
                 PinView()
                     .tag(1)
-                WalkView() 
+                WalkView()
                     .tag(2)
                 ClockView()
                     .tag(3)
@@ -116,9 +117,14 @@ extension MainTabbedView {
     do {
         let previewer = try ActivityPreviewer()
 
-        return MainTabbedView(weather: previewWeather)
+        return MainTabbedView(weather: previewWeather, activities: activities)
             .modelContainer(previewer.container)
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
     }
 }
+
+//
+//#Preview {
+//    return MainTabbedView(weather: )
+//}

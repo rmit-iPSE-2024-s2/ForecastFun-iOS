@@ -41,11 +41,11 @@ struct ScheduleView: View {
                 SchedulePicker(selectedOption: $selectedOption)
                     .padding(.bottom, 10)
                 
-                ScrollView(.vertical, showsIndicators: false) {
-                    ForEach(activities.filter { $0.day == selectedOption.rawValue }, id: \.self) { activity in
-                        ActivitySection(activity: activity, cardBackgroundColor: cardBackgroundColor, textColor: textColor)
-                    }
-                }
+//                ScrollView(.vertical, showsIndicators: false) {
+//                    ForEach(activities.filter { $0.day == selectedOption.rawValue }, id: \.self) { activity in
+//                        ActivitySection(activity: activity, cardBackgroundColor: cardBackgroundColor, textColor: textColor)
+//                    }
+//                }
             }
             .padding(20)
         }

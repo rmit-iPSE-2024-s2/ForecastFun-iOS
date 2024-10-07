@@ -41,11 +41,55 @@ func load<T: Decodable>(_ filename: String) -> T {
 extension ResponseBody {
     // Property to return the precipitation amount (in mm), based on the current weather
     var precipitation: Double {
+        // Check current weather for rain
         if let rainAmount = current.rain?.oneHour {
             return rainAmount
         } else {
-            return 0.00
+            return 0.0 // No chance of rain
         }
     }
 
+    // Property to return daily precipitation amount (in mm)
+    var dailyPrecipitation: Double {
+        // Assuming daily is an array of daily weather data
+        var totalPrecipitation: Double = 0.0
+        for dailyEntry in daily {
+            if let rainAmount = dailyEntry.rain {
+                totalPrecipitation += rainAmount
+            } else  {
+                totalPrecipitation += 0.0 // No chance of rain
+            }
+        }
+        return totalPrecipitation
+    }
 }
+
+extension ResponseBody.CurrentWeatherResponse {
+    // Property to return the precipitation amount (in mm), based on the current weather
+    var precipitation: Double {
+        // Check current weather for rain
+        if let rainAmount = rain?.oneHour {
+            return rainAmount
+        } else {
+            return 0.0 // No chance of rain
+        }
+    }
+
+    // Property to return daily precipitation amount (in mm)
+
+}
+
+
+extension ResponseBody.DailyWeatherResponse {
+    // Property to return the precipitation amount (in mm), based on the current weather
+    var dailyPrecipitation: Double {
+        if let rainAmount = rain {
+            return rainAmount
+        } else  {
+            return 0.0 // No chance of rain
+        }
+        
+    }
+}
+
+

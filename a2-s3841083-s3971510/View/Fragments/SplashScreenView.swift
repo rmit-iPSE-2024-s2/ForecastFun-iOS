@@ -21,8 +21,7 @@ struct SplashScreenView: View {
             
             if let location = locationManager.location{
                 if let weather = weather {
-//                    Text("Weather Data fetched")
-                    MainTabbedView(weather: weather)
+                    MainTabbedView(weather: weather, activities: activities)
                 } else{
                     ProgressView()
                         .task{

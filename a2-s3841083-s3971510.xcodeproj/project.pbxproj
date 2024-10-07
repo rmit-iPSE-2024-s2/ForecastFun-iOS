@@ -14,6 +14,9 @@
 		DD47833F2CA2B430002317AC /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD47833E2CA2B430002317AC /* WeatherManager.swift */; };
 		DD4783402CA3C770002317AC /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD47833D2CA12E88002317AC /* LocationManager.swift */; };
 		DD4783422CA3E52E002317AC /* StartupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4783412CA3E52E002317AC /* StartupView.swift */; };
+		DD6E29B32CB11CBD009B07D4 /* ConditionRecommendation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6E29B22CB11CBD009B07D4 /* ConditionRecommendation.swift */; };
+		DD6E29B52CB13ABC009B07D4 /* AddToScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6E29B42CB13ABC009B07D4 /* AddToScheduleView.swift */; };
+		DD6E29B72CB25F95009B07D4 /* DayPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6E29B62CB25F94009B07D4 /* DayPickerView.swift */; };
 		DD737EAC2CA5355A00EADC4D /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD737EAB2CA5355900EADC4D /* ModelData.swift */; };
 		DD737EAE2CA5359200EADC4D /* weatherData.json in Resources */ = {isa = PBXBuildFile; fileRef = DD737EAD2CA5359200EADC4D /* weatherData.json */; };
 		DD737EB12CA5383F00EADC4D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD737EB02CA5383F00EADC4D /* Extensions.swift */; };
@@ -30,6 +33,7 @@
 		DDB82F6C2C9158E600CF8FBB /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F582C9158E500CF8FBB /* ScheduleView.swift */; };
 		DDB82F6D2C9158E600CF8FBB /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F5C2C9158E600CF8FBB /* SplashScreenView.swift */; };
 		DDBF25272CA789A5007E6CF4 /* HourlyForecastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDBF25262CA789A5007E6CF4 /* HourlyForecastManager.swift */; };
+		DDCB89732CB026B3004DDDE8 /* ActivitiesNow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCB89722CB026B3004DDDE8 /* ActivitiesNow.swift */; };
 		DDD0BECD2C914F2200B967A3 /* a2_s3841083_s3971510App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD0BECC2C914F2200B967A3 /* a2_s3841083_s3971510App.swift */; };
 		DDD0BECF2C914F2200B967A3 /* DummyContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD0BECE2C914F2200B967A3 /* DummyContentView.swift */; };
 		DDD0BED12C914F2200B967A3 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD0BED02C914F2200B967A3 /* Item.swift */; };
@@ -45,6 +49,9 @@
 		DD47833D2CA12E88002317AC /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		DD47833E2CA2B430002317AC /* WeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
 		DD4783412CA3E52E002317AC /* StartupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupView.swift; sourceTree = "<group>"; };
+		DD6E29B22CB11CBD009B07D4 /* ConditionRecommendation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionRecommendation.swift; sourceTree = "<group>"; };
+		DD6E29B42CB13ABC009B07D4 /* AddToScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToScheduleView.swift; sourceTree = "<group>"; };
+		DD6E29B62CB25F94009B07D4 /* DayPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPickerView.swift; sourceTree = "<group>"; };
 		DD737EAB2CA5355900EADC4D /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
 		DD737EAD2CA5359200EADC4D /* weatherData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = weatherData.json; sourceTree = "<group>"; };
 		DD737EB02CA5383F00EADC4D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -61,6 +68,7 @@
 		DDB82F5E2C9158E600CF8FBB /* sampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sampleData.swift; sourceTree = "<group>"; };
 		DDB82F5F2C9158E600CF8FBB /* UpcomingForecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingForecast.swift; sourceTree = "<group>"; };
 		DDBF25262CA789A5007E6CF4 /* HourlyForecastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyForecastManager.swift; sourceTree = "<group>"; };
+		DDCB89722CB026B3004DDDE8 /* ActivitiesNow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesNow.swift; sourceTree = "<group>"; };
 		DDD0BEC92C914F2200B967A3 /* a2-s3841083-s3971510.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "a2-s3841083-s3971510.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDD0BECC2C914F2200B967A3 /* a2_s3841083_s3971510App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = a2_s3841083_s3971510App.swift; sourceTree = "<group>"; };
 		DDD0BECE2C914F2200B967A3 /* DummyContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyContentView.swift; sourceTree = "<group>"; };
@@ -116,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				DD737EB02CA5383F00EADC4D /* Extensions.swift */,
+				DD6E29B22CB11CBD009B07D4 /* ConditionRecommendation.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -126,6 +135,9 @@
 				DDB82F5B2C9158E600CF8FBB /* RecActivityView.swift */,
 				DDB82F592C9158E600CF8FBB /* ContentView.swift */,
 				DDB82F5A2C9158E600CF8FBB /* HomeScreen.swift */,
+				DDCB89722CB026B3004DDDE8 /* ActivitiesNow.swift */,
+				DD6E29B42CB13ABC009B07D4 /* AddToScheduleView.swift */,
+				DD6E29B62CB25F94009B07D4 /* DayPickerView.swift */,
 			);
 			path = Homepage;
 			sourceTree = "<group>";
@@ -291,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD912F862CAA56970003B46B /* a2-s3841083-s3971510.docc in Sources */,
+				DDCB89732CB026B3004DDDE8 /* ActivitiesNow.swift in Sources */,
 				DD4783402CA3C770002317AC /* LocationManager.swift in Sources */,
 				DD2A165A2CAE2E0300F14386 /* ActivityPreviewer.swift in Sources */,
 				DD737EAC2CA5355A00EADC4D /* ModelData.swift in Sources */,
@@ -303,6 +316,8 @@
 				DDB82F622C9158E600CF8FBB /* ScheduleOptionList.swift in Sources */,
 				DDD0BECF2C914F2200B967A3 /* DummyContentView.swift in Sources */,
 				DDB82F672C9158E600CF8FBB /* UpcomingForecast.swift in Sources */,
+				DD6E29B72CB25F95009B07D4 /* DayPickerView.swift in Sources */,
+				DD6E29B52CB13ABC009B07D4 /* AddToScheduleView.swift in Sources */,
 				DD4783422CA3E52E002317AC /* StartupView.swift in Sources */,
 				DDB82F6A2C9158E600CF8FBB /* ScheduleActivitySection.swift in Sources */,
 				DD47833F2CA2B430002317AC /* WeatherManager.swift in Sources */,
@@ -310,6 +325,7 @@
 				DD737EB12CA5383F00EADC4D /* Extensions.swift in Sources */,
 				DDD0BED12C914F2200B967A3 /* Item.swift in Sources */,
 				DDB82F632C9158E600CF8FBB /* TriangleLayout.swift in Sources */,
+				DD6E29B32CB11CBD009B07D4 /* ConditionRecommendation.swift in Sources */,
 				92B8DC392CAF739000FDE987 /* AddActivities.swift in Sources */,
 				DDB82F6B2C9158E600CF8FBB /* DiscoveryScroll.swift in Sources */,
 				DDD0BECD2C914F2200B967A3 /* a2_s3841083_s3971510App.swift in Sources */,
