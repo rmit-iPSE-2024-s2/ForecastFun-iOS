@@ -8,22 +8,22 @@
 import SwiftUI
 
 struct DiscoveryScroll: View {
-    let images = ["queenspark", "scottsdale", "botanicgardens", "carltongardens", "princesspark", "yarrabend"]
-    let titles = ["Queens Park", "Scottsdale", "Botanic Gardens", "Carlton Gardens", "Princess Park", "Yarra Bend"]
+    let images = ["Basketball", "Running", "Soccer", "Swimming", "Cycling", "Tennis"]
+    let titles = ["Basketball", "Running", "Soccer", "Swimming", "Cycling", "Tennis"]
     let subtitles = ["2km Away", "3km Away", "1.5km Away", "2.5km Away", "4km Away", "2km Away"]
     
     let backgroundColor = Color(red: 43/255, green: 58/255, blue: 84/255)
     let textColor = Color(red: 226/255, green: 237/255, blue: 255/255)
     let highlightColor = Color.blue
 
-    @Binding var selectedTab: Int 
+    @Binding var selectedTab: Int
     
     var body: some View {
         ZStack {
             backgroundColor.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 16) {
-                Text("Discover")
+                Text("Trending Activities")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(textColor)
@@ -35,12 +35,16 @@ struct DiscoveryScroll: View {
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                             ForEach(0..<images.count, id: \.self) { index in
                                 VStack(alignment: .leading, spacing: 8) {
-                                    Image(images[index])
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(height: 100)  // Shrink image height
-                                        .cornerRadius(10)
-                                        .clipped()
+                                    ZStack {
+                                        // Keep the frame static, and center the image within the frame
+                                        Color.clear.frame(height: 100)
+                                        Image(images[index])
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 66, height: 66)  // 50% larger image
+                                            .padding()  // Optional padding to ensure centering
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Center the image
+                                    }
                                     
                                     Text(titles[index])
                                         .font(.headline)
@@ -58,7 +62,6 @@ struct DiscoveryScroll: View {
                 
                 Spacer()
                 
-      
                 Button(action: {
                     selectedTab = 2
                 }) {
@@ -79,6 +82,6 @@ struct DiscoveryScroll: View {
 
 struct DiscoveryScroll_Previews: PreviewProvider {
     static var previews: some View {
-        DiscoveryScroll(selectedTab: .constant(1))  
+        DiscoveryScroll(selectedTab: .constant(1))
     }
 }
