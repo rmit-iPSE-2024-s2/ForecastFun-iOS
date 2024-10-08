@@ -8,62 +8,77 @@
 import SwiftUI
 
 struct DiscoveryScroll: View {
-    let images = ["queenspark",
-                  "scottsdale",
-                  "botanicgardens",
-                  "carltongardens",
-                  "princesspark",
-                  "yarrabend"]
+    let images = ["queenspark", "scottsdale", "botanicgardens", "carltongardens", "princesspark", "yarrabend"]
+    let titles = ["Queens Park", "Scottsdale", "Botanic Gardens", "Carlton Gardens", "Princess Park", "Yarra Bend"]
+    let subtitles = ["2km Away", "3km Away", "1.5km Away", "2.5km Away", "4km Away", "2km Away"]
+    
+    let backgroundColor = Color(red: 43/255, green: 58/255, blue: 84/255)
+    let textColor = Color(red: 226/255, green: 237/255, blue: 255/255)
+    let highlightColor = Color.blue
+
+    @Binding var selectedTab: Int 
     
     var body: some View {
-        ZStack {Color(red: 218/255, green:210/255 , blue: 240/255, opacity: 1.0)
-                .ignoresSafeArea(.all)
-            VStack(alignment: .leading) {
+        ZStack {
+            backgroundColor.ignoresSafeArea()
+            
+            VStack(alignment: .leading, spacing: 16) {
                 Text("Discover")
                     .font(.largeTitle)
-                    .fontWeight(.semibold)
-                    .padding()
-                ScrollView (.vertical, showsIndicators: false) {
-                    VStack(spacing: 16) {
-                        ForEach(images, id: \.self) { image in
-                            VStack {
-                                Image(image)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(height: 140)
-                                    .clipped()
-                                
-                                HStack {
-                                    VStack (alignment: .leading){
-                                        Text("Queens Park - 2km Away")
-                                            .font(.system(size:14))
-                                            .fontWeight(.semibold)
-                                        Text("Moonee Ponds")
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                    }
+                    .fontWeight(.bold)
+                    .foregroundColor(textColor)
+                    .padding(.horizontal)
+                    .padding(.top, 16)
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 20) {
+                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                            ForEach(0..<images.count, id: \.self) { index in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Image(images[index])
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(height: 100)  // Shrink image height
+                                        .cornerRadius(10)
+                                        .clipped()
                                     
-                                    Spacer()
-                                    
-                                    Text("4.4")
-                                        .font(.caption2)
-                                        .padding(6)
-                                        .background(Color(.systemGray5))
-                                        .clipShape(Circle())
+                                    Text(titles[index])
+                                        .font(.headline)
+                                        .foregroundColor(textColor)
+                                    Text(subtitles[index])
+                                        .font(.subheadline)
+                                        .foregroundColor(textColor.opacity(0.7))
                                 }
+                                .padding(.horizontal, 8)
                             }
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, 16)
                     }
                 }
+                
+                Spacer()
+                
+      
+                Button(action: {
+                    selectedTab = 2
+                }) {
+                    Text("Choose an Activity")
+                        .font(.headline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(highlightColor)
+                        .foregroundColor(backgroundColor)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 40)
             }
         }
     }
-    
-    
-    struct DiscoveryScroll_Previews: PreviewProvider {
-        static var previews: some View {
-            DiscoveryScroll()
-        }
+}
+
+struct DiscoveryScroll_Previews: PreviewProvider {
+    static var previews: some View {
+        DiscoveryScroll(selectedTab: .constant(1))  
     }
 }

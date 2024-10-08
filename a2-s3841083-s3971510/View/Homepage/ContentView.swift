@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  A1
-//
-//  Created by Anthony Forti on 28/8/2024.
-//
-
 import SwiftUI
 import SwiftData
 
@@ -17,13 +10,16 @@ struct HomeView: View {
 }
 
 struct PinView: View {
+    @Binding var selectedTab: Int
+    
     var body: some View {
-        DiscoveryScroll()
+        DiscoveryScroll(selectedTab: $selectedTab)
     }
 }
 
+
 struct WalkView: View {
-    @Environment(\.modelContext) private var context // Required for ActivitiesView to work with SwiftData
+    @Environment(\.modelContext) private var context
     
     var body: some View {
         ActivityListView()
@@ -79,12 +75,12 @@ struct MainTabbedView: View {
             TabView(selection: $selectedTab) {
                 HomeScreen(activities: activities, weather: weather)
                     .tag(0)
-                PinView()
+                PinView(selectedTab: $selectedTab)  
                     .tag(1)
                 WalkView()
                     .tag(2)
            //     ClockView()
-            //        .tag(3)
+           //        .tag(3)
             }
             ZStack {
                 HStack {
@@ -104,6 +100,7 @@ struct MainTabbedView: View {
         }
     }
 }
+
 
 extension MainTabbedView {
     func CustomTabItem(imageName: String, isActive: Bool) -> some View {
