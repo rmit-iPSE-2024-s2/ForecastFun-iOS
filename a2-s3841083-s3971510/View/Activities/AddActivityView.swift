@@ -5,7 +5,6 @@
 //  Created by Anthony Forti on 8/10/2024.
 //
 
-import Foundation
 import SwiftUI
 
 struct AddActivityView: View {

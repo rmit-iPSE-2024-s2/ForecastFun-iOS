@@ -5,35 +5,35 @@
 //  Created by Anthony Forti on 8/10/2024.
 //
 
-import Foundation
 import SwiftUI
-
+import SwiftData
 
 struct ActivityListView: View {
-    @State private var activities: [Activity] = []
+    @Environment(\.modelContext) private var context
+    @Query private var activities: [Activity]
     @State private var showAddActivitySheet = false
-    
+
     let backgroundColor = Color(red: 43/255, green: 58/255, blue: 84/255)
     let cardBackgroundColor = Color(red: 36/255, green: 50/255, blue: 71/255)
     let highlightColor = Color.blue
     let textColor = Color(red: 226/255, green: 237/255, blue: 255/255)
-    
+
     init() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = UIColor(backgroundColor)
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        
+
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
     }
-    
+
     var body: some View {
         NavigationView {
             ZStack {
                 backgroundColor.ignoresSafeArea()
-                
+
                 VStack {
                     if activities.isEmpty {
                         Text("No activities added")
@@ -50,13 +50,13 @@ struct ActivityListView: View {
                                             .foregroundColor(textColor)
                                         Spacer()
                                         Button(action: {
-                                            deleteActivity(activity)
+                                            deleteItems(at: IndexSet(integer: activities.firstIndex(of: activity)!))
                                         }) {
                                             Image(systemName: "trash")
                                                 .foregroundColor(.red)
                                         }
                                     }
-                                    
+
                                     // Displaying preferred weather conditions
                                     Text("Temperature: \(Int(activity.temperatureRange[0]))°C - \(Int(activity.temperatureRange[1]))°C")
                                         .foregroundColor(textColor.opacity(0.7))
@@ -74,13 +74,14 @@ struct ActivityListView: View {
                                 .padding(.vertical, 8)
                                 .listRowBackground(cardBackgroundColor)
                             }
+                            .onDelete(perform: deleteItems)
                         }
                         .background(backgroundColor)
                         .scrollContentBackground(.hidden)
                     }
-                    
+
                     Spacer()
-                    
+
                     Button(action: {
                         showAddActivitySheet = true
                     }) {
@@ -94,10 +95,9 @@ struct ActivityListView: View {
                     .padding()
                     .sheet(isPresented: $showAddActivitySheet) {
                         AddActivityView(onAdd: { activity in
-                            // Update precip range to always show 0-10 mm
                             var updatedActivity = activity
                             updatedActivity.precipRange = [0, 10]
-                            activities.append(updatedActivity)
+                            addActivity(updatedActivity)
                         })
                     }
                 }
@@ -107,14 +107,17 @@ struct ActivityListView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
-    
-    private func deleteActivity(_ activity: Activity) {
-        activities.removeAll { $0.activityId == activity.activityId }
-    }
-}
 
-struct ActivityListView_Previews: PreviewProvider {
-    static var previews: some View {
-        ActivityListView()
+  
+    private func addActivity(_ activity: Activity) {
+        context.insert(activity)
+    }
+
+   
+    private func deleteItems(at offsets: IndexSet) {
+        for index in offsets {
+            let activity = activities[index]
+            context.delete(activity)
+        }
     }
 }
