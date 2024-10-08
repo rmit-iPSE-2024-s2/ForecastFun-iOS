@@ -19,15 +19,15 @@ struct WalkView: View {
     @Environment(\.modelContext) private var context // Required for ActivitiesView to work with SwiftData
     
     var body: some View {
-        ActivitiesView()
+        ActivityListView()
     }
 }
 
-struct ClockView: View {
-    var body: some View {
-        ScheduleView()
-    }
-}
+// struct ClockView: View {
+//     var body: some View {
+//         ScheduleView()
+//     }
+// }
 
 enum TabbedItems: Int, CaseIterable {
     case home = 0
@@ -76,8 +76,8 @@ struct MainTabbedView: View {
                     .tag(1)
                 WalkView()
                     .tag(2)
-                ClockView()
-                    .tag(3)
+           //     ClockView()
+            //        .tag(3)
             }
             ZStack {
                 HStack {

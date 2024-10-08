@@ -14,14 +14,11 @@ struct ActivitiesView: View {
     @State private var weatherData: (temperature: String, wind: String, humidity: String, precipitation: String) = ("20°C", "9 km/h", "41%", "0 mm")
     
     @Environment(\.modelContext) private var context
-    @Query private var scheduledActivities: [ActivityRecord]
-    
     let locations = [
         "Griffith Park", "Venice Beach", "Echo Park", "Santa Monica Pier", "Runyon Canyon",
         "Hollywood Walk of Fame", "The Grove", "Dodger Stadium", "Malibu Beach", "Los Angeles Zoo"
     ]
     
-    // Define the color scheme for the dark theme
     let backgroundColor = Color(red: 43/255, green: 58/255, blue: 84/255)
     let cardBackgroundColor = Color(red: 36/255, green: 50/255, blue: 71/255)
     let highlightColor = Color.blue

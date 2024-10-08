@@ -14,7 +14,6 @@ struct a2_s3841083_s3971510App: App {
         let schema = Schema([
             Item.self,
             Activity.self,
-            ActivityRecord.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

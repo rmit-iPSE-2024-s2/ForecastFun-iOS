@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		920C18A12CB49E2700B73848 /* ActivityListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920C18A02CB49E2700B73848 /* ActivityListView.swift */; };
+		920C18A32CB49E4000B73848 /* AddActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920C18A22CB49E4000B73848 /* AddActivityView.swift */; };
+		920C18A52CB49E5900B73848 /* SetParametersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920C18A42CB49E5900B73848 /* SetParametersView.swift */; };
 		924651BD2CA93861007D771B /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924651BC2CA93861007D771B /* Activity.swift */; };
-		92B8DC392CAF739000FDE987 /* AddActivities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B8DC382CAF739000FDE987 /* AddActivities.swift */; };
-		92B8DC3B2CAF75D700FDE987 /* ActivityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B8DC3A2CAF75D700FDE987 /* ActivityData.swift */; };
 		DD2A165A2CAE2E0300F14386 /* ActivityPreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2A16592CAE2E0300F14386 /* ActivityPreviewer.swift */; };
 		DD47833F2CA2B430002317AC /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD47833E2CA2B430002317AC /* WeatherManager.swift */; };
 		DD4783402CA3C770002317AC /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD47833D2CA12E88002317AC /* LocationManager.swift */; };
@@ -21,16 +22,13 @@
 		DD737EAE2CA5359200EADC4D /* weatherData.json in Resources */ = {isa = PBXBuildFile; fileRef = DD737EAD2CA5359200EADC4D /* weatherData.json */; };
 		DD737EB12CA5383F00EADC4D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD737EB02CA5383F00EADC4D /* Extensions.swift */; };
 		DD912F862CAA56970003B46B /* a2-s3841083-s3971510.docc in Sources */ = {isa = PBXBuildFile; fileRef = DD912F852CAA56970003B46B /* a2-s3841083-s3971510.docc */; };
-		DDB82F622C9158E600CF8FBB /* ScheduleOptionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F572C9158E500CF8FBB /* ScheduleOptionList.swift */; };
 		DDB82F632C9158E600CF8FBB /* TriangleLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F562C9158E500CF8FBB /* TriangleLayout.swift */; };
 		DDB82F652C9158E600CF8FBB /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F5A2C9158E600CF8FBB /* HomeScreen.swift */; };
 		DDB82F662C9158E600CF8FBB /* RecActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F5B2C9158E600CF8FBB /* RecActivityView.swift */; };
 		DDB82F672C9158E600CF8FBB /* UpcomingForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F5F2C9158E600CF8FBB /* UpcomingForecast.swift */; };
 		DDB82F682C9158E600CF8FBB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F592C9158E600CF8FBB /* ContentView.swift */; };
 		DDB82F692C9158E600CF8FBB /* sampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F5E2C9158E600CF8FBB /* sampleData.swift */; };
-		DDB82F6A2C9158E600CF8FBB /* ScheduleActivitySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F5D2C9158E600CF8FBB /* ScheduleActivitySection.swift */; };
 		DDB82F6B2C9158E600CF8FBB /* DiscoveryScroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F552C9158E500CF8FBB /* DiscoveryScroll.swift */; };
-		DDB82F6C2C9158E600CF8FBB /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F582C9158E500CF8FBB /* ScheduleView.swift */; };
 		DDB82F6D2C9158E600CF8FBB /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB82F5C2C9158E600CF8FBB /* SplashScreenView.swift */; };
 		DDBF25272CA789A5007E6CF4 /* HourlyForecastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDBF25262CA789A5007E6CF4 /* HourlyForecastManager.swift */; };
 		DDCB89732CB026B3004DDDE8 /* ActivitiesNow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCB89722CB026B3004DDDE8 /* ActivitiesNow.swift */; };
@@ -42,9 +40,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		920C18A02CB49E2700B73848 /* ActivityListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityListView.swift; sourceTree = "<group>"; };
+		920C18A22CB49E4000B73848 /* AddActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddActivityView.swift; sourceTree = "<group>"; };
+		920C18A42CB49E5900B73848 /* SetParametersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetParametersView.swift; sourceTree = "<group>"; };
 		924651BC2CA93861007D771B /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
-		92B8DC382CAF739000FDE987 /* AddActivities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddActivities.swift; sourceTree = "<group>"; };
-		92B8DC3A2CAF75D700FDE987 /* ActivityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityData.swift; sourceTree = "<group>"; };
 		DD2A16592CAE2E0300F14386 /* ActivityPreviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPreviewer.swift; sourceTree = "<group>"; };
 		DD47833D2CA12E88002317AC /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		DD47833E2CA2B430002317AC /* WeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
@@ -58,13 +57,10 @@
 		DD912F852CAA56970003B46B /* a2-s3841083-s3971510.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = "a2-s3841083-s3971510.docc"; sourceTree = "<group>"; };
 		DDB82F552C9158E500CF8FBB /* DiscoveryScroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryScroll.swift; sourceTree = "<group>"; };
 		DDB82F562C9158E500CF8FBB /* TriangleLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriangleLayout.swift; sourceTree = "<group>"; };
-		DDB82F572C9158E500CF8FBB /* ScheduleOptionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleOptionList.swift; sourceTree = "<group>"; };
-		DDB82F582C9158E500CF8FBB /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
 		DDB82F592C9158E600CF8FBB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DDB82F5A2C9158E600CF8FBB /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		DDB82F5B2C9158E600CF8FBB /* RecActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecActivityView.swift; sourceTree = "<group>"; };
 		DDB82F5C2C9158E600CF8FBB /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
-		DDB82F5D2C9158E600CF8FBB /* ScheduleActivitySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleActivitySection.swift; sourceTree = "<group>"; };
 		DDB82F5E2C9158E600CF8FBB /* sampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sampleData.swift; sourceTree = "<group>"; };
 		DDB82F5F2C9158E600CF8FBB /* UpcomingForecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingForecast.swift; sourceTree = "<group>"; };
 		DDBF25262CA789A5007E6CF4 /* HourlyForecastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyForecastManager.swift; sourceTree = "<group>"; };
@@ -145,8 +141,9 @@
 		DDB82F6F2C91593A00CF8FBB /* Activities */ = {
 			isa = PBXGroup;
 			children = (
-				92B8DC382CAF739000FDE987 /* AddActivities.swift */,
-				92B8DC3A2CAF75D700FDE987 /* ActivityData.swift */,
+				920C18A02CB49E2700B73848 /* ActivityListView.swift */,
+				920C18A22CB49E4000B73848 /* AddActivityView.swift */,
+				920C18A42CB49E5900B73848 /* SetParametersView.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -173,9 +170,6 @@
 		DDB82F722C91599300CF8FBB /* Schedule */ = {
 			isa = PBXGroup;
 			children = (
-				DDB82F572C9158E500CF8FBB /* ScheduleOptionList.swift */,
-				DDB82F5D2C9158E600CF8FBB /* ScheduleActivitySection.swift */,
-				DDB82F582C9158E500CF8FBB /* ScheduleView.swift */,
 			);
 			path = Schedule;
 			sourceTree = "<group>";
@@ -310,23 +304,21 @@
 				DDB82F6D2C9158E600CF8FBB /* SplashScreenView.swift in Sources */,
 				DDB82F682C9158E600CF8FBB /* ContentView.swift in Sources */,
 				DDB82F662C9158E600CF8FBB /* RecActivityView.swift in Sources */,
-				92B8DC3B2CAF75D700FDE987 /* ActivityData.swift in Sources */,
 				DDB82F692C9158E600CF8FBB /* sampleData.swift in Sources */,
 				DDB82F652C9158E600CF8FBB /* HomeScreen.swift in Sources */,
-				DDB82F622C9158E600CF8FBB /* ScheduleOptionList.swift in Sources */,
+				920C18A12CB49E2700B73848 /* ActivityListView.swift in Sources */,
+				920C18A52CB49E5900B73848 /* SetParametersView.swift in Sources */,
 				DDD0BECF2C914F2200B967A3 /* DummyContentView.swift in Sources */,
 				DDB82F672C9158E600CF8FBB /* UpcomingForecast.swift in Sources */,
 				DD6E29B72CB25F95009B07D4 /* DayPickerView.swift in Sources */,
 				DD6E29B52CB13ABC009B07D4 /* AddToScheduleView.swift in Sources */,
+				920C18A32CB49E4000B73848 /* AddActivityView.swift in Sources */,
 				DD4783422CA3E52E002317AC /* StartupView.swift in Sources */,
-				DDB82F6A2C9158E600CF8FBB /* ScheduleActivitySection.swift in Sources */,
 				DD47833F2CA2B430002317AC /* WeatherManager.swift in Sources */,
-				DDB82F6C2C9158E600CF8FBB /* ScheduleView.swift in Sources */,
 				DD737EB12CA5383F00EADC4D /* Extensions.swift in Sources */,
 				DDD0BED12C914F2200B967A3 /* Item.swift in Sources */,
 				DDB82F632C9158E600CF8FBB /* TriangleLayout.swift in Sources */,
 				DD6E29B32CB11CBD009B07D4 /* ConditionRecommendation.swift in Sources */,
-				92B8DC392CAF739000FDE987 /* AddActivities.swift in Sources */,
 				DDB82F6B2C9158E600CF8FBB /* DiscoveryScroll.swift in Sources */,
 				DDD0BECD2C914F2200B967A3 /* a2_s3841083_s3971510App.swift in Sources */,
 				924651BD2CA93861007D771B /* Activity.swift in Sources */,
