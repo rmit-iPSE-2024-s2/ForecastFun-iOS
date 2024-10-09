@@ -20,10 +20,10 @@ class Activity: Identifiable {
     var added: Bool
     var scheduled: Bool
     var temp: Double?
-    var humid: Double?
+    var humid: Int?
     var wind: Double?
     var precip: Double?
-    var start: Date?
+    var start: Int?
     var end: Date?
     var location: String?
 
@@ -38,10 +38,10 @@ class Activity: Identifiable {
         added: Bool,
         scheduled: Bool,
         temp: Double? = nil,
-        humid: Double? = nil,
+        humid: Int? = nil,
         wind: Double? = nil,
         precip: Double? = nil,
-        start: Date? = nil,
+        start: Int? = nil,
         end: Date? = nil,
         location: String? = nil
     ) {

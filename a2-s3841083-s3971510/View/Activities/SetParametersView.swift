@@ -96,12 +96,12 @@ struct SetParametersView: View {
                 
                 // Save Button
                 Button(action: {
-                    activity.temperatureRange = [tempLowerBound, tempUpperBound]
-                    activity.windRange = [windLowerBound, windUpperBound]
-                    activity.precipRange = [precipLowerBound, precipUpperBound]
-                    activity.humidityRange = [Int(humidityLowerBound), Int(humidityUpperBound)]
-                    
-                    onSave(activity)
+                    let activityToBeAdded = Activity(
+                        activityId: Int.random(in: 10...100), activityName: activity.activityName, humidityRange: [Int(humidityLowerBound), Int(humidityUpperBound)], temperatureRange: [tempLowerBound, tempUpperBound], windRange: [windLowerBound, windUpperBound], precipRange: [precipLowerBound, precipUpperBound], keyword: activity.keyword, added: true, scheduled: false) // Adjust initialization based on your Activity model
+                        
+
+                        // Call the onSave closure with the new activity
+                        onSave(activityToBeAdded)
                 }) {
                     Text("Add Activity")
                         .font(.headline)

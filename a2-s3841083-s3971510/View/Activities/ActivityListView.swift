@@ -15,7 +15,7 @@ struct ActivityListView: View {
 
     let backgroundColor = Color(red: 43/255, green: 58/255, blue: 84/255)
     let cardBackgroundColor = Color(red: 36/255, green: 50/255, blue: 71/255)
-    let highlightColor = Color.blue
+    let highlightColor = Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.7)
     let textColor = Color(red: 226/255, green: 237/255, blue: 255/255)
 
     init() {
@@ -35,14 +35,15 @@ struct ActivityListView: View {
                 backgroundColor.ignoresSafeArea()
 
                 VStack {
-                    if activities.isEmpty {
+                    if activities.filter({ $0.added }).isEmpty {
                         Text("No activities added")
                             .font(.headline)
                             .foregroundColor(textColor.opacity(0.7))
                             .padding()
                     } else {
                         List {
-                            ForEach(activities) { activity in
+                            ForEach(activities.filter { $0.added }, id: \.activityId) { activity in
+                                
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack {
                                         Text(activity.activityName)
@@ -50,7 +51,7 @@ struct ActivityListView: View {
                                             .foregroundColor(textColor)
                                         Spacer()
                                         Button(action: {
-                                            deleteItems(at: IndexSet(integer: activities.firstIndex(of: activity)!))
+                                            deleteItems(at: IndexSet(integer: activities.filter{ $0.added }.firstIndex(of: activity)!))
                                         }) {
                                             Image(systemName: "trash")
                                                 .foregroundColor(.red)
@@ -73,9 +74,12 @@ struct ActivityListView: View {
                                 }
                                 .padding(.vertical, 8)
                                 .listRowBackground(cardBackgroundColor)
+                                
                             }
                             .onDelete(perform: deleteItems)
                         }
+                        .listRowSpacing(10.0)
+                        .padding(6)
                         .background(backgroundColor)
                         .scrollContentBackground(.hidden)
                     }
@@ -95,8 +99,8 @@ struct ActivityListView: View {
                     .padding()
                     .sheet(isPresented: $showAddActivitySheet) {
                         AddActivityView(onAdd: { activity in
-                            var updatedActivity = activity
-                            updatedActivity.precipRange = [0, 10]
+                            let updatedActivity = activity
+                            updatedActivity.added = true
                             addActivity(updatedActivity)
                         })
                     }
@@ -108,6 +112,7 @@ struct ActivityListView: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
 
+    
   
     private func addActivity(_ activity: Activity) {
         context.insert(activity)
@@ -116,8 +121,20 @@ struct ActivityListView: View {
    
     private func deleteItems(at offsets: IndexSet) {
         for index in offsets {
-            let activity = activities[index]
+            let activity = activities.filter{ $0.added }[index]
             context.delete(activity)
         }
+    }
+    
+}
+
+#Preview {
+    do {
+        let previewer = try ActivityPreviewer()
+
+        return ActivityListView()
+            .modelContainer(previewer.container)
+    } catch {
+        return Text("Failed to create preview: \(error.localizedDescription)")
     }
 }

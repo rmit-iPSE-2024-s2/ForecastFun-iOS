@@ -6,75 +6,62 @@
 //
 
 import SwiftUI
+import SwiftData
 import Foundation
 
 struct PreviewConditionView: View {
-    var activities: [Activity]
+    @Binding var showingPopover: Bool
+    @Query var activities: [Activity]
     var activity: Activity
     var weather: ResponseBody
     var weatherDate: Int
     
-    @State private var selectedActivityIndex: Int
-    @State private var selectedDayIndex: Int
-    private let originalActivityIndex: Int
-    private let originalDayIndex: Int
+    @State private var selectedActivityIndex: Int = 0
+    @State private var selectedDayIndex: Int = 0
+    
+    private var originalActivityIndex: Int { selectedActivityIndex }
+    private var originalDayIndex: Int { selectedDayIndex }
     
     private var dayForecasts: [ResponseBody.DailyWeatherResponse] {
-            Array(weather.daily.prefix(4)) // Extract the first 4 days from the weather response
+        Array(weather.daily.prefix(4))
     }
     
-    init(activities: [Activity], activity: Activity, weather: ResponseBody, weatherDate: Int) {
-        self.activities = activities
-        self.activity = activity
-        self.weather = weather
-        self.weatherDate = weatherDate
-        
-        var dayForecasts: [ResponseBody.DailyWeatherResponse] {
-            // Extract the first 4 days from the weather response
-            Array(weather.daily.prefix(4)) // This returns an array of 4 daily forecasts
-        }
-        
-        // Set initial selected activity index
-        if let index = activities.firstIndex(where: { $0.activityId == activity.activityId }) {
-            _selectedActivityIndex = State(initialValue: index)
-            originalActivityIndex = index
-        } else {
-            _selectedActivityIndex = State(initialValue: 0)
-            originalActivityIndex = 0
-        }
-        
-        // Set initial selected day index
-        if let dayIndex = dayForecasts.firstIndex(where: { $0.dt == weatherDate }) {
-            _selectedDayIndex = State(initialValue: dayIndex) // Correct variable name
-            originalDayIndex = dayIndex
-        } else {
-            _selectedDayIndex = State(initialValue: 0) // Correct variable name
-            originalDayIndex = 0
-        }
-    }
-        
-    // Computed property to get the selected activity
-    var selectedActivity: Activity {
-        activities[selectedActivityIndex]
+    var selectedActivity: Activity? {
+        guard !activities.filter({ $0.added }).isEmpty else { return nil }
+        return activities.filter { $0.added }.indices.contains(selectedActivityIndex) ? activities.filter { $0.added }[selectedActivityIndex] : nil
     }
     
     var selectedDay: ResponseBody.DailyWeatherResponse {
         dayForecasts[selectedDayIndex]
     }
     
-//    \(dayForecasts[selectedDayIndex].temp.day.roundDouble())
+    init(showingPopover: Binding<Bool>, activity: Activity, weather: ResponseBody, weatherDate: Int) {
+            self._showingPopover = showingPopover
+            self.activity = activity
+            self.weather = weather
+            self.weatherDate = weatherDate
+        }
     
     private var conditionText: String {
-        let activityColor = determineActivityColor(activity: selectedActivity, currentTemp: dayForecasts[selectedDayIndex].temp.day, currentPrecip: dayForecasts[selectedDayIndex].dailyPrecipitation, currentHumidity: dayForecasts[selectedDayIndex].humidity, currentWind: dayForecasts[selectedDayIndex].wind_speed)
+        guard let activity = selectedActivity else {
+            return "Activity not found" // Handle the case when there's no selected activity
+        }
+        
+        let activityColor = determineActivityColor(activity: activity,
+       currentTemp: dayForecasts[selectedDayIndex].temp.day,
+       currentPrecip: dayForecasts[selectedDayIndex].dailyPrecipitation,
+       currentHumidity: dayForecasts[selectedDayIndex].humidity,
+       currentWind: dayForecasts[selectedDayIndex].wind_speed)
         
         if activityColor == .green {
             return "Good Conditions"
-        } else if activityColor == .yellow{
+        } else if activityColor == .yellow {
             return "Fair Conditions"
         } else {
             return "Poor Conditions"
         }
     }
+    
     
     private var isInRange: Bool {
         // Check if all conditions are within the range
@@ -94,29 +81,27 @@ struct PreviewConditionView: View {
                     .ignoresSafeArea(.all)
                 VStack(spacing:20) {
                     HStack{
-                    Text("\(selectedActivity.activityName)")
-                        .font(.system(size:28))
-                        .padding(.top, 40)
-                        .frame(alignment: .leading)
+                        Text("\(selectedActivity?.activityName ?? "Select an Activity")")
+                            .font(.system(size:28))
+                            .padding(.top, 40)
+                            .frame(alignment: .leading)
                         
                         Spacer()
                         
                         ZStack {
                             Picker("Select an Activity", selection: $selectedActivityIndex) {
-                                ForEach(0..<activities.count, id: \.self) { index in
-                                    Text(activities[index].activityName)
+                                ForEach(0..<activities.filter { $0.added }.count, id: \.self) { index in
+                                    Text(activities.filter { $0.added }[index].activityName)
                                         .tint(.white)
                                         .tag(index)
                                 }
                             }
                             .pickerStyle(MenuPickerStyle())
-                            
-                            // Apply background color and corner radius to the ZStack
                             .background(Color(red: 36/255, green: 50/255, blue: 71/255, opacity: 1))
-                            .cornerRadius(10) // Apply corner radius
+                            .cornerRadius(10)
                         }
                         .offset(y: 22)
-                               
+                        
                     }
                     .padding(.horizontal, 20)
                     
@@ -125,24 +110,23 @@ struct PreviewConditionView: View {
                         .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255))
                         .opacity(0.7)
                     
-//                    DayPickerView(selectedSegment: $selectedDayIndex, dayForecasts: dayForecasts)
                     
                     Picker("Select a Day", selection: $selectedDayIndex) {
-                                    ForEach(0..<dayForecasts.count, id: \.self) { index in
-                                        Text("\(dayForecasts[index].dt.convertToDayOfWeek())")
-                                            .tag(index)
-                                            .textCase(/*@START_MENU_TOKEN@*/.uppercase/*@END_MENU_TOKEN@*/)
-                                    }
-                                }
-                                .pickerStyle(SegmentedPickerStyle())
-                                .onAppear {
-                                    // Set UISegmentedControl appearance when the view appears
-                                    UISegmentedControl.appearance().backgroundColor = .clear
-                                    UISegmentedControl.appearance().tintColor = .white
-                                    UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(red: 36/255, green: 50/255, blue: 71/255, alpha: 1.0)
-                                    UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .normal)
-                                    UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
-                                }
+                        ForEach(0..<dayForecasts.count, id: \.self) { index in
+                            Text("\(dayForecasts[index].dt.convertToDayOfWeek())")
+                                .tag(index)
+                                .textCase(/*@START_MENU_TOKEN@*/.uppercase/*@END_MENU_TOKEN@*/)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .onAppear {
+                        // Set UISegmentedControl appearance when the view appears
+                        UISegmentedControl.appearance().backgroundColor = .clear
+                        UISegmentedControl.appearance().tintColor = .white
+                        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(red: 36/255, green: 50/255, blue: 71/255, alpha: 1.0)
+                        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .normal)
+                        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+                    }
                     
                     // Preview for temperature and precipitation
                     HStack(spacing:20){
@@ -165,10 +149,10 @@ struct PreviewConditionView: View {
                                     .padding(.bottom,-1)
                                     Rectangle()
                                         .frame(height: 3)
-                                        .foregroundColor(determineInRange(conditionRange: selectedActivity.temperatureRange, currentCondition: dayForecasts[selectedDayIndex].temp.day)) // dynamic color that changes based on whether it is within range
+                                        .foregroundColor(determineInRange(conditionRange: selectedActivity?.temperatureRange ?? [0,0], currentCondition: dayForecasts[selectedDayIndex].temp.day)) // dynamic color that changes based on whether it is within range
                                         .opacity(0.7)
-
-                                    Text("Ideal: \(selectedActivity.temperatureRange.first?.roundDouble() ?? "") - \(selectedActivity.temperatureRange.last?.roundDouble() ?? "") °C")
+                                    
+                                    Text("Ideal: \(selectedActivity?.temperatureRange.first?.roundDouble() ?? "") - \(selectedActivity?.temperatureRange.last?.roundDouble() ?? "") °C")
                                         .font(.system(size:15))
                                     
                                 }
@@ -191,10 +175,10 @@ struct PreviewConditionView: View {
                                     .padding(.bottom,-1)
                                     Rectangle()
                                         .frame(height: 3)
-                                        .foregroundColor(determineInRange(conditionRange: selectedActivity.precipRange, currentCondition: dayForecasts[selectedDayIndex].dailyPrecipitation))
+                                        .foregroundColor(determineInRange(conditionRange: selectedActivity?.precipRange ?? [0,0], currentCondition: dayForecasts[selectedDayIndex].dailyPrecipitation))
                                         .opacity(0.7)
                                     
-                                    Text("Ideal: \(selectedActivity.precipRange.first?.roundDouble() ?? "") - \(selectedActivity.precipRange.last?.roundDouble() ?? "") mm")
+                                    Text("Ideal: \(selectedActivity?.precipRange.first?.roundDouble() ?? "") - \(selectedActivity?.precipRange.last?.roundDouble() ?? "") mm")
                                         .font(.system(size:15))
                                     
                                 }
@@ -230,9 +214,12 @@ struct PreviewConditionView: View {
                                         .padding(.bottom,-1)
                                         Rectangle()
                                             .frame(height: 3)
-                                            .foregroundColor(determineInRange(conditionRange: selectedActivity.humidityRange.map { Double($0) }, currentCondition: Double(dayForecasts[selectedDayIndex].humidity)))
+                                            .foregroundColor(determineInRange(
+                                                conditionRange: selectedActivity?.humidityRange.map { Double($0) } ?? [0.0, 0.0],
+                                                currentCondition: Double(dayForecasts[selectedDayIndex].humidity)
+                                            ))
                                             .opacity(0.7)
-                                        Text("Ideal: \(selectedActivity.humidityRange.first ?? 0) - \(selectedActivity.humidityRange.last ?? 0) %")
+                                        Text("Ideal: \(selectedActivity?.humidityRange.first ?? 0) - \(selectedActivity?.humidityRange.last ?? 0) %")
                                             .font(.system(size:15))
                                         
                                     }
@@ -255,10 +242,10 @@ struct PreviewConditionView: View {
                                         .padding(.bottom,-1)
                                         Rectangle()
                                             .frame(height: 3)
-                                            .foregroundColor(determineInRange(conditionRange: selectedActivity.windRange, currentCondition: dayForecasts[selectedDayIndex].wind_speed))
+                                            .foregroundColor(determineInRange(conditionRange: selectedActivity?.windRange ?? [0,0], currentCondition: dayForecasts[selectedDayIndex].wind_speed))
                                             .opacity(0.7)
                                         
-                                        Text("Ideal: \(selectedActivity.windRange.first?.roundDouble() ?? "") - \(selectedActivity.windRange.last?.roundDouble() ?? "") km/h")
+                                        Text("Ideal: \(selectedActivity?.windRange.first?.roundDouble() ?? "") - \(selectedActivity?.windRange.last?.roundDouble() ?? "") km/h")
                                             .font(.system(size:15))
                                         
                                     }
@@ -274,9 +261,10 @@ struct PreviewConditionView: View {
                                     .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255))
                                     .opacity(0.7)
                                 
-                                Text("\(conditionText) for this activity on \(dayForecasts[selectedDayIndex].dt.convertToDayOfWeek())")
+                                Text("\(conditionText) for this activity on \(dayForecasts[selectedDayIndex].dt.convertToFullDayOfWeek())")
                                     .padding(.bottom, 10)
-                                    .frame(height: 55)
+                                    .frame(width: 320,height: 55)
+                                    .multilineTextAlignment(/*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/)
                             }
                         }
                         .padding(15)
@@ -303,19 +291,27 @@ struct PreviewConditionView: View {
                                 .resizable()
                                 .frame(width: 40, height: 40)
                             
-                            Text("New Scheduled Activity")
+                            Text("Finalise your Activity")
                                 .fontWeight(.bold)
                                 .padding(.horizontal, 15)
                                 .font(.system(size:17.5))
                                 .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
                             
-                            Image(systemName :"arrow.forward.circle")
-                                .resizable()
-                                .frame(width: 25, height: 25)
+                            
+                            if let activity = selectedActivity {
+                                NavigationLink(destination: NewScheduleView(showingPopover:$showingPopover, selectedActivity: activity, selectedDay: dayForecasts[selectedDayIndex])) {
+                                    Image(systemName: "arrow.forward.circle")
+                                        .resizable()
+                                        .frame(width: 25, height: 25)
+                                        .foregroundColor(Color(red: 226/255, green: 237/255, blue: 255/255, opacity: 1.0))
+                                }
+                            }
+                            
                             
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(24)
+                        
                         
                     }
                     .frame(width: 360)
@@ -323,66 +319,70 @@ struct PreviewConditionView: View {
                     .cornerRadius(15)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
-                    )
+                            .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1))
                     
-                    Spacer()
                 }
-                .frame(maxWidth: .infinity)
-                .padding(30)
-                .onDisappear {
-                    selectedActivityIndex = originalActivityIndex
-                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(24)
                 
-                
+                Spacer()
             }
-            .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+            .frame(maxWidth: .infinity)
+            .padding(30)
+            .onAppear {
+                if let index = activities.filter({ $0.added }).firstIndex(where: { $0.activityId == activity.activityId }) {
+                    selectedActivityIndex = index
+                } else {
+                    selectedActivityIndex = 0 
+                }
+                
+                // Find the day index in dayForecasts
+                if let firstForecastDate = dayForecasts.first?.dt,
+                   let lastForecastDate = dayForecasts.last?.dt {
+                    if let dayIndex = dayForecasts.firstIndex(where: { $0.dt == weatherDate }) {
+                        selectedDayIndex = dayIndex
+                    } else {
+                        selectedDayIndex = 0
+                    }
+                }
+            }
+            .onDisappear {
+                selectedActivityIndex = originalActivityIndex
+            }
+            
+            
         }
+        .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
     }
 }
 
 
+
+
 #Preview {
-    // Mock data for multiple activities
-    PreviewConditionView(
-        activities: [
-            Activity(
-                activityId: 1,
-                activityName: "Running",
-                humidityRange: [40, 60],
-                temperatureRange: [15, 25],
-                windRange: [0, 10],
-                precipRange: [0, 1],
-                keyword: "outdoor",
-                added: true,
-                scheduled: false
-            ),
-            Activity(
-                activityId: 2,
-                activityName: "Cycling",
-                humidityRange: [30, 70],
-                temperatureRange: [10, 20],
-                windRange: [0, 15],
-                precipRange: [0, 0],
-                keyword: "outdoor",
-                added: true,
-                scheduled: false
-            )
-        ],
-        activity:
-            Activity(
-                activityId: 1,
-                activityName: "Running",
-                humidityRange: [40, 60],
-                temperatureRange: [15, 25],
-                windRange: [0, 10],
-                precipRange: [0, 1],
-                keyword: "outdoor",
-                added: true,
-                scheduled: false
-            )
-            ,
-        weather: previewWeather,
-        weatherDate: 1727488800
-    )
+    do {
+        let previewer = try ActivityPreviewer()
+        @State var showingPopover = true
+        return PreviewConditionView(
+            showingPopover: $showingPopover,
+            activity:
+                Activity(
+                    activityId: 8,
+                    activityName: "Picnic",
+                    humidityRange: [40, 60],
+                    temperatureRange: [18.0, 26.0],
+                    windRange: [0.0, 5.0],
+                    precipRange: [0.0, 0.05],
+                    keyword: "park",
+                    added: true,
+                    scheduled: false
+                ),
+            weather: previewWeather,
+            weatherDate: 1727575200
+        )
+        .modelContainer(previewer.container)
+    } catch {
+        return Text("Failed to create preview: \(error.localizedDescription)")
+    }
 }
+

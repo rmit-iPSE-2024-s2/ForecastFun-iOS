@@ -5,7 +5,7 @@ struct HomeView: View {
     var weather: ResponseBody
     
     var body: some View {
-        HomeScreen(activities: activities, weather: weather )
+        HomeScreen(weather: weather )
     }
 }
 
@@ -73,7 +73,7 @@ struct MainTabbedView: View {
     var body: some View {
         ZStack (alignment: .bottom) {
             TabView(selection: $selectedTab) {
-                HomeScreen(activities: activities, weather: weather)
+                HomeScreen(weather: weather)
                     .tag(0)
                 PinView(selectedTab: $selectedTab)  
                     .tag(1)
@@ -127,8 +127,3 @@ extension MainTabbedView {
         return Text("Failed to create preview: \(error.localizedDescription)")
     }
 }
-
-//
-//#Preview {
-//    return MainTabbedView(weather: )
-//}

@@ -6,20 +6,16 @@
 //
 
 import SwiftUI
-
+import SwiftData
 struct AddActivityView: View {
     let onAdd: (Activity) -> Void
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedActivity: Activity?
-    
-    let availableActivities: [Activity] = [
-        Activity(activityId: 1, activityName: "Walking", humidityRange: [30, 40], temperatureRange: [18, 25], windRange: [2, 5], precipRange: [0, 0], keyword: "outdoor", added: false, scheduled: false),
-        Activity(activityId: 2, activityName: "Running", humidityRange: [30], temperatureRange: [18, 23], windRange: [2], precipRange: [0], keyword: "outdoor", added: false, scheduled: false)
-    ]
+    @Query var activities: [Activity]
     
     let backgroundColor = Color(red: 43/255, green: 58/255, blue: 84/255)
     let cardBackgroundColor = Color(red: 36/255, green: 50/255, blue: 71/255)
-    let highlightColor = Color.blue
+    let highlightColor = Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.7)
     let textColor = Color(red: 226/255, green: 237/255, blue: 255/255)
     
     var body: some View {
@@ -32,7 +28,7 @@ struct AddActivityView: View {
                     .foregroundColor(textColor)
                     .padding()
                 
-                ForEach(availableActivities, id: \.activityId) { activity in
+                ForEach(activities.filter { !$0.added && !$0.scheduled }, id: \.activityId) { activity in
                     Button(action: {
                         selectedActivity = activity
                     }) {
@@ -51,6 +47,7 @@ struct AddActivityView: View {
                         })
                     }
                 }
+
                 
                 Spacer()
                 
@@ -67,8 +64,14 @@ struct AddActivityView: View {
     }
 }
 
-struct AddActivityView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddActivityView(onAdd: { _ in })
+
+#Preview {
+    do {
+        let previewer = try ActivityPreviewer()
+
+        return AddActivityView(onAdd: { _ in })
+            .modelContainer(previewer.container)
+    } catch {
+        return Text("Failed to create preview: \(error.localizedDescription)")
     }
 }

@@ -10,12 +10,13 @@ import SwiftUI
 import SwiftData
 
 struct HomeScreen: View {
+    
     @Environment(\.modelContext) var modelContext
     @StateObject var locationManager = LocationManager()
     @State private var showTodayView: Bool = true
     @State private var forecast: UpcomingForecast? = nil
-
-    var activities: [Activity]
+    
+    @Query var activities: [Activity]
 
     var weather: ResponseBody
     private var firstDailyDt: Int {
@@ -159,12 +160,13 @@ struct HomeScreen: View {
                     else{
                         VStack(spacing: 10){
                             if let activity = activities.first {
-                                fourDayView(weather: weather, activities: activities.filter { $0.added }, activity: activity)
+                                fourDayView(weather: weather, activity: activity)
                             }
 
 
                         }
                     }
+                    
                     
                     VStack(spacing:-2){
                         VStack(spacing:-12)
@@ -200,11 +202,11 @@ struct HomeScreen: View {
                                         
                                         HStack{
                                             Image(systemName: "plus.square")
-                                                .font(.system(size: 30))
+                                                .font(.system(size: 40))
                                                 .fontWeight(.light)
-                                                .opacity(0.9)
+                                                .opacity(0.8)
                                         }
-                                        .frame(width: 60, height: 55)
+                                        .frame(width: 65, height: 55)
                                         .padding()
                                         .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
                                         .cornerRadius(15)
@@ -215,7 +217,6 @@ struct HomeScreen: View {
                                     } else {
                                         ForEach(activities.filter { $0.added }, id: \.activityId) { activity in
                                             ActivityView(
-                                                activities: activities.filter { $0.added }, // This could be optimized depending on your use case
                                                 activity: activity,
                                                 weather: weather,
                                                 weatherDate: firstDailyDt
@@ -226,12 +227,13 @@ struct HomeScreen: View {
                                         }
                                         
                                         HStack{
+                       
                                             Image(systemName: "plus.square")
-                                                .font(.system(size: 30))
-                                                .fontWeight(.thin)
-                                                .opacity(0.9)
+                                                .font(.system(size: 40))
+                                                .fontWeight(.light)
+                                                .opacity(0.8)
                                         }
-                                        .frame(width: 60, height: 55)
+                                        .frame(width: 65, height: 55)
                                         .padding()
                                         .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
                                         .cornerRadius(15)
@@ -249,8 +251,9 @@ struct HomeScreen: View {
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 30)
-                            nextScheduledView()
-                            
+                            if let activity = activities.first {
+                                nextScheduledView(activity: activity, weather: weather, weatherDate: firstDailyDt)
+                            }
                             Spacer()
                             
                         }
@@ -274,7 +277,7 @@ struct HomeScreen: View {
     do {
         let previewer = try ActivityPreviewer()
         
-        return HomeScreen(activities: activities, weather: previewWeather)
+        return HomeScreen(weather: previewWeather)
             .modelContainer(previewer.container)
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
@@ -282,45 +285,95 @@ struct HomeScreen: View {
 }
 
 struct nextScheduledView : View{
+    @Query var activities: [Activity]
+    var activity: Activity
+    var weather: ResponseBody
+    var weatherDate: Int
+    @State private var showAlert = false
+    @State private var showingPopover = false
+    
     var body: some View{
         VStack{
-            HStack{
-                VStack(spacing:2){
-                    Text("MON")
-                        .fontWeight(.bold)
-                    Text("7AM")
-                }
-                .font(.system(size:23))
-                .padding(15)
-                .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+            let scheduledActivities = activities.filter { $0.scheduled }
+            let upcomingActivity = scheduledActivities.min(by: {
+                ($0.start ?? Int.max) < ($1.start ?? Int.max)
+            })
+
+            if let upcomingActivity = upcomingActivity {
                 
-                VStack(spacing:13){
-                    Text("Running @ Graham Park")
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size:17.5))
-                    HStack{
-                        Text("Good Conditions")
+                let locationText = upcomingActivity.location ?? "Unknown Location"
+                let scheduledDay = upcomingActivity.start?.convertToDayOfWeek() ?? "..."
+                HStack{
+                    VStack(spacing:2){
+                        Text("DAY")
+                            .fontWeight(.bold)
+                        Text("\(scheduledDay)")
+                            .textCase(.uppercase)
+                    }
+                    .font(.system(size:23))
+                    .padding(15)
+                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                    
+                    VStack(spacing:13){
+                        Text("\(upcomingActivity.activityName) @ \(locationText)")
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.system(size:17.5))
+                        HStack{
+                            Text("Good Conditions")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
+                                .font(.system(size:17))
+                                .fontWeight(.semibold)
+                                .padding(.bottom,1)
+                        }
+                        .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.7))
+                        
+                    }
+                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                    
+                }
+                .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+                .cornerRadius(15)
+                .frame(width: 360)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
+                )
+            }
+            else{
+                HStack{
+                    VStack(spacing:13){
+
+                        Text("No Scheduled Activities")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .cornerRadius(3.0)
+                            .font(.system(size:17))
+                            .fontWeight(.semibold)
+                            .padding(.bottom,1)
+                        
+                        Text("Please Schedule an Activity")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
                             .font(.system(size:17))
                             .fontWeight(.semibold)
-                            .padding(.bottom,2)
+                            .padding(.bottom,1)
+                            .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
+
+                        
                     }
-                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.7))
+                    .padding()
+                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 7.0))
                     
                 }
-                .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
-                
+                .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+                .cornerRadius(15)
+                .frame(width: 360)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
+                )
             }
-            .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
-            .cornerRadius(15)
-            .frame(width: 360)
-            .overlay(
-                RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
-            )
-            
             
             // Add new scheduled activity
             HStack{
@@ -336,9 +389,21 @@ struct nextScheduledView : View{
                         .font(.system(size:17.5))
                         .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
                     
-                    Image(systemName :"arrow.forward.circle")
-                        .resizable()
-                        .frame(width: 25, height: 25)
+                    Button(action: {
+                        
+                        if activities.filter({ $0.added }).isEmpty {
+                            showAlert = true
+                        } else {
+                            showingPopover = true
+                        }
+                    }) {
+                        Image(systemName: "arrow.forward.circle")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                    }
+                    .popover(isPresented: $showingPopover) {
+                        PreviewConditionView(showingPopover: $showingPopover, activity: activity, weather: weather, weatherDate:weatherDate)
+                    }
                     
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -352,7 +417,13 @@ struct nextScheduledView : View{
                 RoundedRectangle(cornerRadius: 15)
                     .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
             )
-            
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("No Liked Activities"),
+                    message: Text("You don't have any liked activities to schedule an activity"),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
         
         
@@ -363,11 +434,12 @@ struct nextScheduledView : View{
 
 struct fourDayView: View {
     var weather: ResponseBody
-    var activities: [Activity]
+    @Query var activities: [Activity]
     var activity: Activity
-    @State private var dayPopover = false
     @State private var activePopoverDay: Int? = nil
+    @State private var showingPopover = false
     @State private var showAlert = false
+
     
     func getWeatherIcon(for weatherID: Int) -> String {
         switch weatherID {
@@ -408,7 +480,7 @@ struct fourDayView: View {
                 HStack(spacing: 10) {
                     Rectangle()
                         .frame(width: 4, height: 24)
-                        .foregroundColor(.green)
+                        .foregroundColor( activities.filter({ $0.added }).isEmpty ? .blue : .green)
                         .opacity(0.7)
                         .padding(.leading, 17)
 
@@ -445,6 +517,7 @@ struct fourDayView: View {
                         } else {
                             // Set the active popover day if activities are present
                             activePopoverDay = day.dt
+                            showingPopover = true
                         }
                     }) {
                         Image(systemName: "arrow.forward.circle")
@@ -452,10 +525,16 @@ struct fourDayView: View {
                             .frame(width: 20, height: 20)
                     }
                     .popover(isPresented: Binding(
-                        get: { activePopoverDay == day.dt }, // Show if activePopoverDay matches this day's dt
-                        set: { if !$0 { activePopoverDay = nil } } // Dismiss by setting nil
+                        get: { activePopoverDay == day.dt && showingPopover },
+                        set: { newValue in
+                            if !newValue {
+                                // Close the popover by resetting the active day and showingPopover
+                                activePopoverDay = nil
+                                showingPopover = false
+                            }
+                        }
                     )) {
-                        PreviewConditionView(activities: activities, activity: activity, weather: weather, weatherDate:day.dt)
+                        PreviewConditionView(showingPopover: $showingPopover, activity: activity, weather: weather, weatherDate: day.dt)
                     }
                     .padding(.trailing, 20)
                     
@@ -510,4 +589,4 @@ func getIconName(from icon: String) -> String {
 }
 
 
-// create a day 
+// create a day

@@ -11,6 +11,7 @@
 		920C18A32CB49E4000B73848 /* AddActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920C18A22CB49E4000B73848 /* AddActivityView.swift */; };
 		920C18A52CB49E5900B73848 /* SetParametersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920C18A42CB49E5900B73848 /* SetParametersView.swift */; };
 		924651BD2CA93861007D771B /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924651BC2CA93861007D771B /* Activity.swift */; };
+		DD2083542CB5A42500DFBF32 /* NewScheduledView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2083532CB5A42500DFBF32 /* NewScheduledView.swift */; };
 		DD2A165A2CAE2E0300F14386 /* ActivityPreviewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2A16592CAE2E0300F14386 /* ActivityPreviewer.swift */; };
 		DD47833F2CA2B430002317AC /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD47833E2CA2B430002317AC /* WeatherManager.swift */; };
 		DD4783402CA3C770002317AC /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD47833D2CA12E88002317AC /* LocationManager.swift */; };
@@ -44,6 +45,7 @@
 		920C18A22CB49E4000B73848 /* AddActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddActivityView.swift; sourceTree = "<group>"; };
 		920C18A42CB49E5900B73848 /* SetParametersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetParametersView.swift; sourceTree = "<group>"; };
 		924651BC2CA93861007D771B /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
+		DD2083532CB5A42500DFBF32 /* NewScheduledView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewScheduledView.swift; sourceTree = "<group>"; };
 		DD2A16592CAE2E0300F14386 /* ActivityPreviewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPreviewer.swift; sourceTree = "<group>"; };
 		DD47833D2CA12E88002317AC /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		DD47833E2CA2B430002317AC /* WeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				DDCB89722CB026B3004DDDE8 /* ActivitiesNow.swift */,
 				DD6E29B42CB13ABC009B07D4 /* AddToScheduleView.swift */,
 				DD6E29B62CB25F94009B07D4 /* DayPickerView.swift */,
+				DD2083532CB5A42500DFBF32 /* NewScheduledView.swift */,
 			);
 			path = Homepage;
 			sourceTree = "<group>";
@@ -315,6 +318,7 @@
 				920C18A32CB49E4000B73848 /* AddActivityView.swift in Sources */,
 				DD4783422CA3E52E002317AC /* StartupView.swift in Sources */,
 				DD47833F2CA2B430002317AC /* WeatherManager.swift in Sources */,
+				DD2083542CB5A42500DFBF32 /* NewScheduledView.swift in Sources */,
 				DD737EB12CA5383F00EADC4D /* Extensions.swift in Sources */,
 				DDD0BED12C914F2200B967A3 /* Item.swift in Sources */,
 				DDB82F632C9158E600CF8FBB /* TriangleLayout.swift in Sources */,

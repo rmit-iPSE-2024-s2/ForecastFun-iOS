@@ -25,4 +25,11 @@ extension Int {
         dateFormatter.dateFormat = "E"  // shortens day name from monday - mon
         return dateFormatter.string(from: date)
     }
+    
+    func convertToFullDayOfWeek() -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(self))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        return dateFormatter.string(from: date)
+    }
 }

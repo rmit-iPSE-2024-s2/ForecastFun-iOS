@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct ActivityView: View {
-    var activities: [Activity]
+    @Query var activities: [Activity]
     var activity: Activity
     var weather: ResponseBody
     var weatherDate: Int
@@ -59,8 +59,7 @@ struct ActivityView: View {
         VStack {
             VStack(spacing: 5) {
                 HStack {
-
-                    Text(activity.activityName)
+                    Text("\(activity.activityName)")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.system(size: 22))
                     
@@ -72,7 +71,7 @@ struct ActivityView: View {
                             .frame(width: 20, height: 20)
                     }
                     .popover(isPresented: $showingPopover) {
-                        PreviewConditionView(activities: activities, activity: activity, weather: weather, weatherDate:weatherDate)
+                        PreviewConditionView(showingPopover: $showingPopover,activity: activity, weather: weather, weatherDate:weatherDate)
                     }
                 }
                 .padding(.bottom, 8)
@@ -111,36 +110,12 @@ struct ActivityView: View {
 #Preview {
     do {
         let previewer = try ActivityPreviewer()
-        
+        @State var isPopoverPresented = true
         return ActivityView(
-            activities: [
-                Activity(
-                    activityId: 1,
-                    activityName: "Running",
-                    humidityRange: [40, 60],
-                    temperatureRange: [15, 25],
-                    windRange: [0, 10],
-                    precipRange: [0, 1],
-                    keyword: "outdoor",
-                    added: true,
-                    scheduled: false
-                ),
-                Activity(
-                    activityId: 2,
-                    activityName: "Cycling",
-                    humidityRange: [30, 70],
-                    temperatureRange: [10, 20],
-                    windRange: [0, 15],
-                    precipRange: [0, 2],
-                    keyword: "outdoor",
-                    added: true,
-                    scheduled: false
-                )
-            ],
             activity:
                 Activity(
                     activityId: 1,
-                    activityName: "Running",
+                    activityName: "Picnic",
                     humidityRange: [40, 60],
                     temperatureRange: [15, 25],
                     windRange: [0, 10],
@@ -151,7 +126,7 @@ struct ActivityView: View {
                 )
                 ,
             weather: previewWeather,
-            weatherDate: 1727488800
+            weatherDate: 1727575200
         )
             .modelContainer(previewer.container)
     } catch {
