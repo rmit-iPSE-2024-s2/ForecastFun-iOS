@@ -41,8 +41,6 @@
 		DDEC79752CB6897300CA614C /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEC79742CB6897300CA614C /* ScheduleView.swift */; };
 		DDEC79772CB6A97000CA614C /* YelpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEC79762CB6A97000CA614C /* YelpManager.swift */; };
 		DDEC79792CB6ADF200CA614C /* DiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEC79782CB6ADF200CA614C /* DiscoveryView.swift */; };
-		DDEC797B2CB6C03B00CA614C /* locationData.json in Resources */ = {isa = PBXBuildFile; fileRef = DDEC797A2CB6C03B00CA614C /* locationData.json */; };
-		DDEC797D2CB6C07600CA614C /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEC797C2CB6C07600CA614C /* LocationData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,8 +79,6 @@
 		DDEC79742CB6897300CA614C /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
 		DDEC79762CB6A97000CA614C /* YelpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YelpManager.swift; sourceTree = "<group>"; };
 		DDEC79782CB6ADF200CA614C /* DiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryView.swift; sourceTree = "<group>"; };
-		DDEC797A2CB6C03B00CA614C /* locationData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locationData.json; sourceTree = "<group>"; };
-		DDEC797C2CB6C07600CA614C /* LocationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,9 +232,7 @@
 			children = (
 				DDD0BED52C914F2800B967A3 /* Preview Assets.xcassets */,
 				DD737EAB2CA5355900EADC4D /* ModelData.swift */,
-				DDEC797C2CB6C07600CA614C /* LocationData.swift */,
 				DD737EAD2CA5359200EADC4D /* weatherData.json */,
-				DDEC797A2CB6C03B00CA614C /* locationData.json */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -301,7 +295,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDEC797B2CB6C03B00CA614C /* locationData.json in Resources */,
 				DDD0BED62C914F2800B967A3 /* Preview Assets.xcassets in Resources */,
 				DD737EAE2CA5359200EADC4D /* weatherData.json in Resources */,
 				DDD0BED32C914F2800B967A3 /* Assets.xcassets in Resources */,
@@ -315,7 +308,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDEC797D2CB6C07600CA614C /* LocationData.swift in Sources */,
 				DD912F862CAA56970003B46B /* a2-s3841083-s3971510.docc in Sources */,
 				DDCB89732CB026B3004DDDE8 /* ActivitiesNow.swift in Sources */,
 				DD4783402CA3C770002317AC /* LocationManager.swift in Sources */,
