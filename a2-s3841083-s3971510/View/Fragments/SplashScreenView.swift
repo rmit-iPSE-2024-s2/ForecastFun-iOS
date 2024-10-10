@@ -21,7 +21,7 @@ struct SplashScreenView: View {
             
             if let location = locationManager.location{
                 if let weather = weather {
-                    MainTabbedView(weather: weather, activities: activities)
+                    MainTabbedView(weather: weather, location: location)
                 } else{
                     ProgressView()
                         .task{
@@ -42,9 +42,7 @@ struct SplashScreenView: View {
                 }
             }
             
-            
-            // Uncomment this to edit / avoid making API calls
-//            MainTabbedView(latitude: 1, longitude: 1)
+
             
             
         }

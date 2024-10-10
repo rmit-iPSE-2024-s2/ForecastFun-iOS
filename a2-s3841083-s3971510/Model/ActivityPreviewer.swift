@@ -129,7 +129,45 @@ struct ActivityPreviewer {
                 keyword: "golf",
                 added: true,
                 scheduled: false
+            ),
+            Activity(
+                activityId: 9,
+                activityName: "Golf",
+                humidityRange: [30, 70],
+                temperatureRange: [20.0, 30.0],
+                windRange: [0.0, 15.0],
+                precipRange: [0.0, 0.1],
+                keyword: "golf",
+                added: false,
+                scheduled: true,
+                start: 1727488800
+            ),
+            Activity(
+                activityId: 10,
+                activityName: "Picnic",
+                humidityRange: [40, 60],
+                temperatureRange: [18.0, 26.0],
+                windRange: [0.0, 5.0],
+                precipRange: [0.0, 0.05],
+                keyword: "park",
+                added: false,
+                scheduled: true,
+                start: 1727488800
+            ),
+            Activity(
+                activityId: 7,
+                activityName: "Hiking",
+                humidityRange: [30, 50],
+                temperatureRange: [10.0, 20.0],
+                windRange: [0.0, 15.0],
+                precipRange: [0.0, 0.2],
+                keyword: "outdoor",
+                added: false,
+                scheduled: true,
+                start: 1727661600
             )
+            
+            
         ]
 
         // Insert activities into the in-memory context

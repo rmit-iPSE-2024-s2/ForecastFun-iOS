@@ -1,6 +1,6 @@
 import SwiftUI
 import SwiftData
-
+import CoreLocation
 struct HomeView: View {
     var weather: ResponseBody
     
@@ -11,9 +11,10 @@ struct HomeView: View {
 
 struct PinView: View {
     @Binding var selectedTab: Int
-    
+    var location: CLLocationCoordinate2D
     var body: some View {
-        DiscoveryScroll(selectedTab: $selectedTab)
+//        DiscoveryScroll(selectedTab: $selectedTab)
+        DiscoveryView(location: location)
     }
 }
 
@@ -26,11 +27,14 @@ struct WalkView: View {
     }
 }
 
-// struct ClockView: View {
-//     var body: some View {
-//         ScheduleView()
-//     }
-// }
+ struct ClockView: View {
+     var weather: ResponseBody
+     
+     var body: some View {
+         
+         ScheduleView(weather:weather)
+     }
+ }
 
 enum TabbedItems: Int, CaseIterable {
     case home = 0
@@ -67,7 +71,7 @@ enum TabbedItems: Int, CaseIterable {
 
 struct MainTabbedView: View {
     var weather: ResponseBody
-    var activities: [Activity]
+    var location: CLLocationCoordinate2D
     @State var selectedTab = 0
     
     var body: some View {
@@ -75,12 +79,12 @@ struct MainTabbedView: View {
             TabView(selection: $selectedTab) {
                 HomeScreen(weather: weather)
                     .tag(0)
-                PinView(selectedTab: $selectedTab)  
+                PinView(selectedTab: $selectedTab, location: location)
                     .tag(1)
                 WalkView()
                     .tag(2)
-           //     ClockView()
-           //        .tag(3)
+                ClockView(weather: weather)
+                   .tag(3)
             }
             ZStack {
                 HStack {
@@ -120,8 +124,8 @@ extension MainTabbedView {
 #Preview {
     do {
         let previewer = try ActivityPreviewer()
-
-        return MainTabbedView(weather: previewWeather, activities: activities)
+        let mockLocation = CLLocationCoordinate2D(latitude: -37.8136, longitude: 144.9631)
+        return MainTabbedView(weather: previewWeather, location: mockLocation )
             .modelContainer(previewer.container)
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")

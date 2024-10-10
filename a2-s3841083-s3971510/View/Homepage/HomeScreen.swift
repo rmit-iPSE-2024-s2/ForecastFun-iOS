@@ -11,16 +11,20 @@ import SwiftData
 
 struct HomeScreen: View {
     
-    @Environment(\.modelContext) var modelContext
+    @Environment(\.modelContext) private var context
     @StateObject var locationManager = LocationManager()
     @State private var showTodayView: Bool = true
     @State private var forecast: UpcomingForecast? = nil
-    
     @Query var activities: [Activity]
+    @State private var showAddActivitySheet = false
 
     var weather: ResponseBody
     private var firstDailyDt: Int {
         return weather.daily.first?.dt ?? 0
+    }
+    
+    private func addActivity(_ activity: Activity) {
+        context.insert(activity)
     }
     
     var body: some View {
@@ -200,19 +204,32 @@ struct HomeScreen: View {
                                                 .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
                                         )
                                         
-                                        HStack{
-                                            Image(systemName: "plus.square")
-                                                .font(.system(size: 40))
-                                                .fontWeight(.light)
-                                                .opacity(0.8)
+                                        
+                                       
+                                        Button(action: {
+                                            showAddActivitySheet = true
+                                        }) {
+                                            HStack{
+                                                Image(systemName: "plus.square")
+                                                    .font(.system(size: 40))
+                                                    .fontWeight(.light)
+                                                    .opacity(0.8)
+                                            }
+                                            .frame(width: 65, height: 55)
+                                            .padding()
+                                            .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+                                            .cornerRadius(15)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 15)
+                                                    .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1))
                                         }
-                                        .frame(width: 65, height: 55)
-                                        .padding()
-                                        .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
-                                        .cornerRadius(15)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 15)
-                                                .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1))
+                                        .sheet(isPresented: $showAddActivitySheet) {
+                                            AddActivityView(onAdd: { activity in
+                                                let updatedActivity = activity
+                                                updatedActivity.added = true
+                                                addActivity(updatedActivity)
+                                            })
+                                        }
                                             
                                     } else {
                                         ForEach(activities.filter { $0.added }, id: \.activityId) { activity in
@@ -226,20 +243,30 @@ struct HomeScreen: View {
                                             
                                         }
                                         
-                                        HStack{
-                       
-                                            Image(systemName: "plus.square")
-                                                .font(.system(size: 40))
-                                                .fontWeight(.light)
-                                                .opacity(0.8)
+                                        Button(action: {
+                                            showAddActivitySheet = true
+                                        }) {
+                                            HStack{
+                                                Image(systemName: "plus.square")
+                                                    .font(.system(size: 40))
+                                                    .fontWeight(.light)
+                                                    .opacity(0.8)
+                                            }
+                                            .frame(width: 65, height: 55)
+                                            .padding()
+                                            .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+                                            .cornerRadius(15)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 15)
+                                                    .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1))
                                         }
-                                        .frame(width: 65, height: 55)
-                                        .padding()
-                                        .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
-                                        .cornerRadius(15)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 15)
-                                                .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1))
+                                        .sheet(isPresented: $showAddActivitySheet) {
+                                            AddActivityView(onAdd: { activity in
+                                                let updatedActivity = activity
+                                                updatedActivity.added = true
+                                                addActivity(updatedActivity)
+                                            })
+                                        }
                                     }
                                 }
                                 .padding(20)
@@ -253,7 +280,9 @@ struct HomeScreen: View {
                                 .padding(.horizontal, 30)
                             if let activity = activities.first {
                                 nextScheduledView(activity: activity, weather: weather, weatherDate: firstDailyDt)
+                                newSchedCardView(activity: activity, weather: weather, weatherDate: firstDailyDt)
                             }
+                            
                             Spacer()
                             
                         }
@@ -267,7 +296,10 @@ struct HomeScreen: View {
             
             
         }
+        
+        
     }
+    
     
 }
 
@@ -375,59 +407,11 @@ struct nextScheduledView : View{
                 )
             }
             
-            // Add new scheduled activity
-            HStack{
-                
-                HStack{
-                    Image(systemName :"calendar")
-                        .resizable()
-                        .frame(width: 40, height: 40)
-
-                    Text("New Scheduled Activity")
-                        .fontWeight(.bold)
-                        .padding(.horizontal, 15)
-                        .font(.system(size:17.5))
-                        .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
-                    
-                    Button(action: {
-                        
-                        if activities.filter({ $0.added }).isEmpty {
-                            showAlert = true
-                        } else {
-                            showingPopover = true
-                        }
-                    }) {
-                        Image(systemName: "arrow.forward.circle")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                    }
-                    .popover(isPresented: $showingPopover) {
-                        PreviewConditionView(showingPopover: $showingPopover, activity: activity, weather: weather, weatherDate:weatherDate)
-                    }
-                    
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(24)
-                
-            }
-            .frame(width: 360)
-            .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
-            .cornerRadius(15)
-            .overlay(
-                RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.2), lineWidth: 1)
-            )
-            .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("No Liked Activities"),
-                    message: Text("You don't have any liked activities to schedule an activity"),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
         }
         
         
     }
+    
 }
 
 
@@ -441,26 +425,7 @@ struct fourDayView: View {
     @State private var showAlert = false
 
     
-    func getWeatherIcon(for weatherID: Int) -> String {
-        switch weatherID {
-        case 200...232: // Thunderstorm
-            return "cloud.bolt.rain.fill"
-        case 300...321: // Drizzle
-            return "cloud.drizzle.fill"
-        case 500...531: // Rain
-            return "cloud.rain.fill"
-        case 600...622: // Snow
-            return "snowflake"
-        case 701...781: // Atmosphere (fog, haze, etc.)
-            return "cloud.fog.fill"
-        case 800:       // Clear
-            return "sun.max.fill"
-        case 801...804: // Clouds
-            return "cloud.fill"
-        default:        // Unknown case
-            return "questionmark"
-        }
-    }
+
     
     var body: some View{
         VStack(spacing: 3) {
@@ -588,5 +553,24 @@ func getIconName(from icon: String) -> String {
     }
 }
 
-
+func getWeatherIcon(for weatherID: Int) -> String {
+    switch weatherID {
+    case 200...232: // Thunderstorm
+        return "cloud.bolt.rain.fill"
+    case 300...321: // Drizzle
+        return "cloud.drizzle.fill"
+    case 500...531: // Rain
+        return "cloud.rain.fill"
+    case 600...622: // Snow
+        return "snowflake"
+    case 701...781: // Atmosphere (fog, haze, etc.)
+        return "cloud.fog.fill"
+    case 800:       // Clear
+        return "sun.max.fill"
+    case 801...804: // Clouds
+        return "cloud.fill"
+    default:        // Unknown case
+        return "questionmark"
+    }
+}
 // create a day
