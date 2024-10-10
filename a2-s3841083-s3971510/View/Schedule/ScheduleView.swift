@@ -7,11 +7,13 @@
 
 import SwiftUI
 import SwiftData
+import CoreLocation
 
 struct ScheduleView: View {
     @Query var activities: [Activity]
     var weather: ResponseBody
-
+    var location: CLLocationCoordinate2D
+    
     @State private var selectedDayIndex: Int = 0
     
     private var dayForecasts: [ResponseBody.DailyWeatherResponse] {
@@ -83,7 +85,7 @@ struct ScheduleView: View {
                         .padding(.bottom, 10)
                     
                     
-                    newSchedCardView(activity: activity, weather: weather, weatherDate: firstDailyDt)
+                    newSchedCardView(activity: activity, weather: weather, weatherDate: firstDailyDt, location: location)
                         .padding(.bottom,11)
                 }
             }
@@ -97,8 +99,9 @@ struct ScheduleView: View {
 #Preview {
     do {
         let previewer = try ActivityPreviewer()
-
-        return ScheduleView(weather: previewWeather)
+        let mockLocation = CLLocationCoordinate2D(latitude: -37.8136, longitude: 144.9631)
+        
+        return ScheduleView(weather: previewWeather, location: mockLocation)
             .modelContainer(previewer.container)
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
@@ -112,6 +115,8 @@ struct newSchedCardView : View{
     var activity: Activity
     var weather: ResponseBody
     var weatherDate: Int
+    var location: CLLocationCoordinate2D
+    
     @State private var showAlert = false
     @State private var showingPopover = false
     
@@ -144,7 +149,7 @@ struct newSchedCardView : View{
                             .frame(width: 20, height: 20)
                     }
                     .popover(isPresented: $showingPopover) {
-                        PreviewConditionView(showingPopover: $showingPopover, activity: activity, weather: weather, weatherDate:weatherDate)
+                        PreviewConditionView(showingPopover: $showingPopover, activity: activity, weather: weather, weatherDate:weatherDate, location: location)
                     }
                     
                 }
@@ -180,8 +185,10 @@ struct scheduleCardView : View{
     
     var body: some View{
         VStack{
-            let locationText = activity.location ?? "Unknown Location"
+            
+            let locationText = (activity.location?.isEmpty == false ? activity.location : "TBD") ?? "TBD"
             let scheduledDay = activity.start?.convertToDayOfWeek() ?? "..."
+            let conditionText = activity.conditionText ?? "No Conditions"
             HStack{
                 VStack(spacing:2){
                     Text("DAY")
@@ -199,7 +206,7 @@ struct scheduleCardView : View{
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.system(size:17.5))
                     HStack{
-                        Text("Good Conditions")
+                        Text("\(conditionText)")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
                             .font(.system(size:17))

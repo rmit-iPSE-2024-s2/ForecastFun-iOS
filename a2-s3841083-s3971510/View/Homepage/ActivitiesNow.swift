@@ -8,12 +8,14 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import CoreLocation
 
 struct ActivityView: View {
     @Query var activities: [Activity]
     var activity: Activity
     var weather: ResponseBody
     var weatherDate: Int
+    var location: CLLocationCoordinate2D
     
     @State private var showingPopover = false
 
@@ -71,7 +73,7 @@ struct ActivityView: View {
                             .frame(width: 20, height: 20)
                     }
                     .popover(isPresented: $showingPopover) {
-                        PreviewConditionView(showingPopover: $showingPopover,activity: activity, weather: weather, weatherDate:weatherDate)
+                        PreviewConditionView(showingPopover: $showingPopover,activity: activity, weather: weather, weatherDate:weatherDate, location: location)
                     }
                 }
                 .padding(.bottom, 8)
@@ -111,6 +113,7 @@ struct ActivityView: View {
     do {
         let previewer = try ActivityPreviewer()
         @State var isPopoverPresented = true
+        let mockLocation = CLLocationCoordinate2D(latitude: -37.8136, longitude: 144.9631)
         return ActivityView(
             activity:
                 Activity(
@@ -126,7 +129,8 @@ struct ActivityView: View {
                 )
                 ,
             weather: previewWeather,
-            weatherDate: 1727575200
+            weatherDate: 1727575200,
+            location: mockLocation
         )
             .modelContainer(previewer.container)
     } catch {

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct NewScheduleView: View {
     @Binding var showingPopover: Bool
@@ -15,6 +16,10 @@ struct NewScheduleView: View {
     var selectedDay: ResponseBody.DailyWeatherResponse
     @Environment(\.modelContext) private var context
     
+    var location: CLLocationCoordinate2D
+    //    @State private var location: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+    
+    @State var selectedLocation: String? = ""
     
     private var conditionText: String {
         let activityColor = determineActivityColor(activity: selectedActivity, currentTemp: selectedDay.temp.day, currentPrecip: selectedDay.dailyPrecipitation, currentHumidity: selectedDay.humidity, currentWind: selectedDay.wind_speed)
@@ -29,7 +34,7 @@ struct NewScheduleView: View {
     }
     
     var body: some View {
-        NavigationView{
+        VStack{
             ZStack{
                 Color(red: 43/255, green:58/255 , blue: 84/255, opacity: 1.0)
                     .ignoresSafeArea(.all)
@@ -218,21 +223,27 @@ struct NewScheduleView: View {
                                 .font(.system(size:40))
                                 .fontWeight(.thin)
                             
-                            Text("No Location Added")
-                                .fontWeight(.bold)
-                                .padding(.horizontal, 15)
-                                .font(.system(size:17.5))
-                                .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                            if selectedLocation == "" {
+                                Text("No Location Added")
+                                    .fontWeight(.bold)
+                                    .padding(.horizontal, 15)
+                                    .font(.system(size:17.5))
+                                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                            }
+                            else{
+                                if let selectedLocation = selectedLocation{
+                                    Text("@ \(selectedLocation)")
+                                        .frame(maxWidth: .infinity, alignment:.leading)
+                                }
+                            }
+
                             
-                            
-                            
-                            Image(systemName: "plus.square")
-                                .font(.system(size:26))
-                                .fontWeight(.light)
-                                .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
-                            
-                            
-                            
+                            NavigationLink(destination: DiscoveryView(location: location, selectedLocation:$selectedLocation)) {
+                                Image(systemName: "plus.square")
+                                    .font(.system(size:26))
+                                    .fontWeight(.light)
+                                    .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                            }
                             
                         }
                         .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255))
@@ -257,7 +268,7 @@ struct NewScheduleView: View {
                         }
                         
                         // Create a new ScheduledActivity instance
-                        let newScheduledActivity = Activity(activityId: Int.random(in: 1000...9999), activityName: selectedActivity.activityName, humidityRange: selectedActivity.humidityRange, temperatureRange: selectedActivity.temperatureRange, windRange: selectedActivity.windRange, precipRange: selectedActivity.precipRange, keyword: selectedActivity.keyword, added: false, scheduled: true, start: selectedDay.dt)
+                        let newScheduledActivity = Activity(activityId: Int.random(in: 1000...9999), activityName: selectedActivity.activityName, humidityRange: selectedActivity.humidityRange, temperatureRange: selectedActivity.temperatureRange, windRange: selectedActivity.windRange, precipRange: selectedActivity.precipRange, keyword: selectedActivity.keyword, added: false, scheduled: true, start: selectedDay.dt, location: selectedLocation, conditionText: conditionText)
                         
                         
                         // Save to SwiftData context
@@ -299,7 +310,7 @@ struct NewScheduleView: View {
     do {
         let previewer = try ActivityPreviewer()
         @State var showingPopover = true
-        
+        let mockLocation = CLLocationCoordinate2D(latitude: -37.8136, longitude: 144.9631)
         return NewScheduleView(
             showingPopover: $showingPopover,
             selectedActivity: Activity(
@@ -334,7 +345,9 @@ struct NewScheduleView: View {
                 pop: 0.0,
                 rain: nil,
                 uvi: 6.5
-            ))
+            ),
+            location: mockLocation
+        )
             .modelContainer(previewer.container)
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")

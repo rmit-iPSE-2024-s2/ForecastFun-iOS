@@ -140,7 +140,8 @@ struct ActivityPreviewer {
                 keyword: "golf",
                 added: false,
                 scheduled: true,
-                start: 1727488800
+                start: 1727575200,
+                conditionText: "Fair Conditions"
             ),
             Activity(
                 activityId: 10,
@@ -152,7 +153,8 @@ struct ActivityPreviewer {
                 keyword: "park",
                 added: false,
                 scheduled: true,
-                start: 1727488800
+                start: 1727661600,
+                conditionText: "Poor Conditions"
             ),
             Activity(
                 activityId: 7,
@@ -164,7 +166,8 @@ struct ActivityPreviewer {
                 keyword: "outdoor",
                 added: false,
                 scheduled: true,
-                start: 1727661600
+                start: 1727661600,
+                conditionText: "Poor Conditions"
             )
             
             

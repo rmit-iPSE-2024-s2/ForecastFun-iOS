@@ -3,18 +3,21 @@ import SwiftData
 import CoreLocation
 struct HomeView: View {
     var weather: ResponseBody
-    
+    var location: CLLocationCoordinate2D
     var body: some View {
-        HomeScreen(weather: weather )
+        
+        HomeScreen(weather: weather, location: location)
     }
 }
 
 struct PinView: View {
-    @Binding var selectedTab: Int
+
     var location: CLLocationCoordinate2D
+    @State private var selectedLocation: String? = nil
+    
     var body: some View {
-//        DiscoveryScroll(selectedTab: $selectedTab)
-        DiscoveryView(location: location)
+        
+        DiscoveryView(location: location, selectedLocation: $selectedLocation)
     }
 }
 
@@ -29,10 +32,9 @@ struct WalkView: View {
 
  struct ClockView: View {
      var weather: ResponseBody
-     
+     var location: CLLocationCoordinate2D
      var body: some View {
-         
-         ScheduleView(weather:weather)
+         ScheduleView(weather:weather, location: location)
      }
  }
 
@@ -77,13 +79,13 @@ struct MainTabbedView: View {
     var body: some View {
         ZStack (alignment: .bottom) {
             TabView(selection: $selectedTab) {
-                HomeScreen(weather: weather)
+                HomeScreen(weather: weather, location: location)
                     .tag(0)
-                PinView(selectedTab: $selectedTab, location: location)
+                PinView(location: location)
                     .tag(1)
                 WalkView()
                     .tag(2)
-                ClockView(weather: weather)
+                ClockView(weather: weather, location: location)
                    .tag(3)
             }
             ZStack {

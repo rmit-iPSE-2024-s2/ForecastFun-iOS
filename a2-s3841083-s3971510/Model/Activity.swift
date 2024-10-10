@@ -26,6 +26,7 @@ class Activity: Identifiable {
     var start: Int?
     var end: Date?
     var location: String?
+    var conditionText: String?
 
     init(
         activityId: Int,
@@ -43,7 +44,8 @@ class Activity: Identifiable {
         precip: Double? = nil,
         start: Int? = nil,
         end: Date? = nil,
-        location: String? = nil
+        location: String? = nil,
+        conditionText: String? = nil
     ) {
         self.activityId = activityId
         self.activityName = activityName
@@ -61,5 +63,6 @@ class Activity: Identifiable {
         self.start = start
         self.end = end
         self.location = location
+        self.conditionText = conditionText
     }
 }

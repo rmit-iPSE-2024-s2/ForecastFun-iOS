@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Foundation
+import CoreLocation
 
 struct PreviewConditionView: View {
     @Binding var showingPopover: Bool
@@ -15,6 +16,7 @@ struct PreviewConditionView: View {
     var activity: Activity
     var weather: ResponseBody
     var weatherDate: Int
+    var location: CLLocationCoordinate2D
     
     @State private var selectedActivityIndex: Int = 0
     @State private var selectedDayIndex: Int = 0
@@ -22,11 +24,14 @@ struct PreviewConditionView: View {
     private var originalActivityIndex: Int { selectedActivityIndex }
     private var originalDayIndex: Int { selectedDayIndex }
     
+    // define a list with upcoming days
     private var dayForecasts: [ResponseBody.DailyWeatherResponse] {
         Array(weather.daily.prefix(4))
     }
     
+    // define the selected activity
     var selectedActivity: Activity? {
+        // make guard against empty activities
         guard !activities.filter({ $0.added }).isEmpty else { return nil }
         return activities.filter { $0.added }.indices.contains(selectedActivityIndex) ? activities.filter { $0.added }[selectedActivityIndex] : nil
     }
@@ -35,23 +40,25 @@ struct PreviewConditionView: View {
         dayForecasts[selectedDayIndex]
     }
     
-    init(showingPopover: Binding<Bool>, activity: Activity, weather: ResponseBody, weatherDate: Int) {
-            self._showingPopover = showingPopover
-            self.activity = activity
-            self.weather = weather
-            self.weatherDate = weatherDate
-        }
+    init(showingPopover: Binding<Bool>, activity: Activity, weather: ResponseBody, weatherDate: Int, location: CLLocationCoordinate2D) {
+        self._showingPopover = showingPopover
+        self.activity = activity
+        self.weather = weather
+        self.weatherDate = weatherDate
+        self.location = location
+    }
     
     private var conditionText: String {
         guard let activity = selectedActivity else {
             return "Activity not found" // Handle the case when there's no selected activity
         }
         
-        let activityColor = determineActivityColor(activity: activity,
-       currentTemp: dayForecasts[selectedDayIndex].temp.day,
-       currentPrecip: dayForecasts[selectedDayIndex].dailyPrecipitation,
-       currentHumidity: dayForecasts[selectedDayIndex].humidity,
-       currentWind: dayForecasts[selectedDayIndex].wind_speed)
+        let activityColor = determineActivityColor(
+            activity: activity,
+            currentTemp: dayForecasts[selectedDayIndex].temp.day,
+            currentPrecip: dayForecasts[selectedDayIndex].dailyPrecipitation,
+            currentHumidity: dayForecasts[selectedDayIndex].humidity,
+            currentWind: dayForecasts[selectedDayIndex].wind_speed)
         
         if activityColor == .green {
             return "Good Conditions"
@@ -299,7 +306,7 @@ struct PreviewConditionView: View {
                             
                             
                             if let activity = selectedActivity {
-                                NavigationLink(destination: NewScheduleView(showingPopover:$showingPopover, selectedActivity: activity, selectedDay: dayForecasts[selectedDayIndex])) {
+                                NavigationLink(destination: NewScheduleView(showingPopover:$showingPopover, selectedActivity: activity, selectedDay: dayForecasts[selectedDayIndex], location: location)) {
                                     Image(systemName: "arrow.forward.circle")
                                         .resizable()
                                         .frame(width: 25, height: 25)
@@ -333,7 +340,7 @@ struct PreviewConditionView: View {
                 if let index = activities.filter({ $0.added }).firstIndex(where: { $0.activityId == activity.activityId }) {
                     selectedActivityIndex = index
                 } else {
-                    selectedActivityIndex = 0 
+                    selectedActivityIndex = 0
                 }
                 
                 // Find the day index in dayForecasts
@@ -363,6 +370,8 @@ struct PreviewConditionView: View {
     do {
         let previewer = try ActivityPreviewer()
         @State var showingPopover = true
+        let mockLocation = CLLocationCoordinate2D(latitude: -37.8136, longitude: 144.9631)
+        
         return PreviewConditionView(
             showingPopover: $showingPopover,
             activity:
@@ -378,7 +387,8 @@ struct PreviewConditionView: View {
                     scheduled: false
                 ),
             weather: previewWeather,
-            weatherDate: 1727575200
+            weatherDate: 1727575200,
+            location: mockLocation
         )
         .modelContainer(previewer.container)
     } catch {

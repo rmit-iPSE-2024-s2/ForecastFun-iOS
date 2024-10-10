@@ -92,3 +92,58 @@ func getWeatherForDate(date: Int, data: ResponseBody) -> ResponseBody.DailyWeath
     // Return nil if no matching weather found
     return nil
 }
+
+
+
+/// Determines the overall color based condition for the day, based on its weather parameters and the ideal conditions of the users' added activities'
+///
+/// This function evaluates all the added activities against the current weather conditions (temperature, precipitation, humidity, and wind).
+/// Each activity is assigned a condition color (green, yellow, or red) based on how well the weather matches its preferred range.
+/// The function then returns an overall color depending on the number of activities that are in "good" condition (green):
+/// - If more than half of the activities are in good condition, the function returns green.
+/// - If none of the activities are in good condition, it returns red.
+/// - Otherwise, it returns yellow.
+///
+/// - Parameters:
+///   - addedActivities: An array of `Activity` objects that represent the activities the user has added.
+///   - currentTemp: The current temperature to evaluate against the activities' temperature range.
+///   - currentPrecip: The current precipitation level to evaluate against the activities' precipitation range.
+///   - currentHumidity: The current humidity level to evaluate against the activities' humidity range.
+///   - currentWind: The current wind speed to evaluate against the activities' wind range.
+/// - Returns: A `Color` representing the overall condition:
+///   - Green if more than half of the activities are in good condition.
+///   - Yellow if some are in good condition, but not the majority.
+///   - Red if none of the activities are in good condition.
+
+func getConditionColorForDay(addedActivities: [Activity], currentTemp: Double, currentPrecip: Double, currentHumidity: Int, currentWind: Double) -> Color {
+    
+    // Initialize the array of Colors
+    var activityConditions: [Color] = []
+    
+    // Iterate through all added activities and determine its condition color under the passed weather parameters
+    for activity in addedActivities {
+        let activityColor = determineActivityColor(activity: activity,
+                                                   currentTemp: currentTemp,
+                                                   currentPrecip: currentPrecip,
+                                                   currentHumidity: currentHumidity,
+                                                   currentWind: currentWind)
+        // Add the color (condition) to the array
+        activityConditions.append(activityColor)
+    }
+    
+    // Count the number of green (good) conditions
+    let greenCount = activityConditions.filter { $0 == .green }.count
+    let yellowCount = activityConditions.filter { $0 == .yellow }.count
+    
+    // If more than half of the activities are green, return green
+    if greenCount > addedActivities.count / 2 {
+        return .green
+    }
+    else if yellowCount > addedActivities.count / 2 { // If more than half of the activities are yellow, return yellow
+        return .yellow
+    }
+    
+    // otherwise return red
+    return .red
+
+}

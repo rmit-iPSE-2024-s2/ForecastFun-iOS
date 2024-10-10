@@ -10,8 +10,8 @@ import CoreLocation
 
 class YelpManager {
     
-    let apiKey = "yp0v9lT-IztPk-Syguj6gAyBNYb2bmPXf-qVg_4JECV3UIuzHSU9PQthTL2GgAnu1BM-KTIACxSdGdzSmAwK3F2C_ACzvivHOmDm0C_f2ssA-Io46OGY3cvpjIEGZ3Yx"
-    
+//    let apiKey = "yp0v9lT-IztPk-Syguj6gAyBNYb2bmPXf-qVg_4JECV3UIuzHSU9PQthTL2GgAnu1BM-KTIACxSdGdzSmAwK3F2C_ACzvivHOmDm0C_f2ssA-Io46OGY3cvpjIEGZ3Yx"
+    let apiKey = "kVl3Bblf5CYU8lKHhDdDRX_AVJLCsX5Y708B6aZbQnOzF4ikXx2x-XDY4e6iaPyq763up-pTIqA5wTbaO63uRpcO40ncJS0pJQWEIeH5UYH1vdPFGszNbZjWzdIHZ3Yx"
     func getNearbyActivityLocations(latitude: CLLocationDegrees, longitude: CLLocationDegrees, activity: String) async throws -> YelpResponse {
        let url = URL(string: "https://api.yelp.com/v3/businesses/search")!
        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!

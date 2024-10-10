@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import CoreLocation
 
 struct HomeScreen: View {
     
@@ -17,8 +18,12 @@ struct HomeScreen: View {
     @State private var forecast: UpcomingForecast? = nil
     @Query var activities: [Activity]
     @State private var showAddActivitySheet = false
-
+    
+    
     var weather: ResponseBody
+    var location: CLLocationCoordinate2D
+    
+    
     private var firstDailyDt: Int {
         return weather.daily.first?.dt ?? 0
     }
@@ -164,7 +169,7 @@ struct HomeScreen: View {
                     else{
                         VStack(spacing: 10){
                             if let activity = activities.first {
-                                fourDayView(weather: weather, activity: activity)
+                                fourDayView(weather: weather, activity: activity, location: location)
                             }
 
 
@@ -236,7 +241,8 @@ struct HomeScreen: View {
                                             ActivityView(
                                                 activity: activity,
                                                 weather: weather,
-                                                weatherDate: firstDailyDt
+                                                weatherDate: firstDailyDt,
+                                                location: location
                                             )
 
                                             
@@ -279,8 +285,8 @@ struct HomeScreen: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 30)
                             if let activity = activities.first {
-                                nextScheduledView(activity: activity, weather: weather, weatherDate: firstDailyDt)
-                                newSchedCardView(activity: activity, weather: weather, weatherDate: firstDailyDt)
+                                nextScheduledView(activity: activity, weather: weather, weatherDate: firstDailyDt, location: location)
+                                newSchedCardView(activity: activity, weather: weather, weatherDate: firstDailyDt, location: location)
                             }
                             
                             Spacer()
@@ -308,8 +314,8 @@ struct HomeScreen: View {
 #Preview {
     do {
         let previewer = try ActivityPreviewer()
-        
-        return HomeScreen(weather: previewWeather)
+        let mockLocation = CLLocationCoordinate2D(latitude: -37.8136, longitude: 144.9631)
+        return HomeScreen(weather: previewWeather, location: mockLocation)
             .modelContainer(previewer.container)
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
@@ -321,20 +327,37 @@ struct nextScheduledView : View{
     var activity: Activity
     var weather: ResponseBody
     var weatherDate: Int
+    var location: CLLocationCoordinate2D
     @State private var showAlert = false
     @State private var showingPopover = false
+      
+    var scheduledActivities: [Activity]? {
+        return activities.filter { $0.scheduled }
+    }
+    
+    var upcomingActivity: Activity? {
+        if let scheduledActivities = scheduledActivities{
+            return scheduledActivities.min(by: {
+                ($0.start ?? Int.max) < ($1.start ?? Int.max)
+            })
+        }
+        else{
+            return nil
+        }
+    }
+    
+
     
     var body: some View{
         VStack{
-            let scheduledActivities = activities.filter { $0.scheduled }
-            let upcomingActivity = scheduledActivities.min(by: {
-                ($0.start ?? Int.max) < ($1.start ?? Int.max)
-            })
+            
 
             if let upcomingActivity = upcomingActivity {
                 
-                let locationText = upcomingActivity.location ?? "Unknown Location"
+                let locationText = (upcomingActivity.location?.isEmpty == false ? upcomingActivity.location : "TBD") ?? "TBD"
+                
                 let scheduledDay = upcomingActivity.start?.convertToDayOfWeek() ?? "..."
+
                 HStack{
                     VStack(spacing:2){
                         Text("DAY")
@@ -347,12 +370,13 @@ struct nextScheduledView : View{
                     .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
                     
                     VStack(spacing:13){
+                        
                         Text("\(upcomingActivity.activityName) @ \(locationText)")
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.system(size:17.5))
                         HStack{
-                            Text("Good Conditions")
+                            Text("\(upcomingActivity.conditionText ?? "No Condition")")
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/)
                                 .font(.system(size:17))
@@ -418,101 +442,173 @@ struct nextScheduledView : View{
 
 struct fourDayView: View {
     var weather: ResponseBody
-    @Query var activities: [Activity]
     var activity: Activity
+    var location: CLLocationCoordinate2D
+    
+    @Query var activities: [Activity]
     @State private var activePopoverDay: Int? = nil
     @State private var showingPopover = false
     @State private var showAlert = false
-
-    
-
+    @State private var showInfo = false
     
     var body: some View{
+        
         VStack(spacing: 3) {
-            Text("4-Day Forecast")
-                .padding()
-                .padding(.bottom, -5)
-                .frame(width: 350, alignment: .leading)
-                .overlay(
-                    Rectangle()
-                        .frame(width: 323, height: 2)
-                        .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255))
-                        .opacity(0.7),
-                    alignment: .bottom
-                )
+            HStack{
+                Text("4-Day Forecast")
+                
+                Spacer()
+                
+                
+                
+                Button(action: {
+                    withAnimation { // Animate the toggle
+                        showInfo.toggle()
+                    }
+                }) {
+                    Image(systemName: "info.circle")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                }
+
+                
+            }
+            .padding(.vertical, 5)
+            .padding(.horizontal, 42)
+
             
-            ForEach(weather.daily.prefix(4), id: \.self) { day in
-                HStack(spacing: 10) {
-                    Rectangle()
-                        .frame(width: 4, height: 24)
-                        .foregroundColor( activities.filter({ $0.added }).isEmpty ? .blue : .green)
-                        .opacity(0.7)
-                        .padding(.leading, 17)
+            
 
-
-                    
-                    Text(day.dt.convertToDayOfWeek()) // Convert the timestamp to the day of the week
-                        .font(.system(size: 20))
-                        .fontWeight(.semibold)
-                        .frame(width: 46, alignment: .leading)
+            Rectangle()
+                .frame(width: 321, height: 1)
+                .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255))
+                .opacity(0.7)
+            
+            if showInfo {
+                ZStack{
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("How it works")
+                            .font(.headline)
                         
-                    
-                    
-                    HStack(spacing: 20) {
-                        // Weather Icon
-                        Image(systemName: getWeatherIcon(for: day.weather.first?.id ?? 0))
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: 1.0))
+                        Rectangle()
+                            .frame(width: 260, height: 1)
+                            .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255))
+                            .opacity(0.7)
                         
-                        // Temperature Details
-                        Text("L: \(day.temp.min.roundDouble())°C")
-                            .frame(width: 70, alignment: .leading)
-                        Text("H: \(day.temp.max.roundDouble())°C")
-                    }
-                    .font(.system(size: 20))
-                    .fontWeight(.regular)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                        VStack(alignment: .leading){
+                            Text("The conditions (color) is based on the number of liked activities that are suited for the corresponding day")
+                                .padding(.vertical)
 
-                    Button(action: {
-                        if activities.filter({ $0.added }).isEmpty {
-                            // Show alert if there are no added activities
-                            showAlert = true
-                        } else {
-                            // Set the active popover day if activities are present
-                            activePopoverDay = day.dt
-                            showingPopover = true
+
                         }
-                    }) {
-                        Image(systemName: "arrow.forward.circle")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                    }
-                    .popover(isPresented: Binding(
-                        get: { activePopoverDay == day.dt && showingPopover },
-                        set: { newValue in
-                            if !newValue {
-                                // Close the popover by resetting the active day and showingPopover
-                                activePopoverDay = nil
-                                showingPopover = false
+                        .font(.system(size: 15))
+                        Rectangle()
+                            .frame(width: 260, height: 1)
+                            .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255))
+                            .opacity(0.7)
+                        
+                        Button("Got it!") {
+                            withAnimation {
+                                showInfo = false  // Close the info VStack
                             }
                         }
-                    )) {
-                        PreviewConditionView(showingPopover: $showingPopover, activity: activity, weather: weather, weatherDate: day.dt)
+                        .padding(.top, 5)
                     }
-                    .padding(.trailing, 20)
-                    
-                    
+                    .frame(width: 283, height: 170)
+                    .padding(13)
+                    .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+                    .cornerRadius(8)
+                    .padding(.horizontal, 42)
+                    .transition(.slide)
                 }
-                .padding(.vertical, 8)
-                .frame(width: 350, alignment: .leading)
-
-                Rectangle()
-                    .frame(width: 323, height: 1.5)
-                    .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: day == weather.daily.prefix(4).last ? 0 : 0.4))
+                .padding(.top)
+                
             }
-            
+            else{
+                ForEach(weather.daily.prefix(4), id: \.self) { day in
+                    HStack(spacing: 10) {
+                        Rectangle()
+                            .frame(width: 4, height: 24)
+                            // if theres no activites, turn blue
+                            // otherwise find whether the day is suitable for your activities
+                            
+                            .foregroundColor( activities.filter({ $0.added }).isEmpty ? .blue :
+                                // color representing if conditions are suitable for added activities
+                                              getConditionColorForDay(
+                                                addedActivities:activities.filter{ $0.added },
+                                                currentTemp: day.temp.day,
+                                                currentPrecip: day.dailyPrecipitation,
+                                                currentHumidity: day.humidity,
+                                                currentWind: day.wind_speed
+                                              )
+                            )
+                            .opacity(0.7)
+                            .padding(.leading, 17)
+
+
+                        
+                        Text(day.dt.convertToDayOfWeek()) // Convert the timestamp to the day of the week
+                            .font(.system(size: 20))
+                            .fontWeight(.semibold)
+                            .frame(width: 46, alignment: .leading)
+                            
+                        
+                        
+                        HStack(spacing: 20) {
+                            // Weather Icon
+                            Image(systemName: getWeatherIcon(for: day.weather.first?.id ?? 0))
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: 1.0))
+                            
+                            // Temperature Details
+                            Text("L: \(day.temp.min.roundDouble())°C")
+                                .frame(width: 70, alignment: .leading)
+                            Text("H: \(day.temp.max.roundDouble())°C")
+                        }
+                        .font(.system(size: 20))
+                        .fontWeight(.regular)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        Button(action: {
+                            if activities.filter({ $0.added }).isEmpty {
+                                // Show alert if there are no added activities
+                                showAlert = true
+                            } else {
+                                // Set the active popover day if activities are present
+                                activePopoverDay = day.dt
+                                showingPopover = true
+                            }
+                        }) {
+                            Image(systemName: "arrow.forward.circle")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                        }
+                        .popover(isPresented: Binding(
+                            get: { activePopoverDay == day.dt && showingPopover },
+                            set: { newValue in
+                                if !newValue {
+                                    // Close the popover by resetting the active day and showingPopover
+                                    activePopoverDay = nil
+                                    showingPopover = false
+                                }
+                            }
+                        )) {
+                            PreviewConditionView(showingPopover: $showingPopover, activity: activity, weather: weather, weatherDate: day.dt, location: location)
+                        }
+                        .padding(.trailing, 20)
+                        
+                        
+                    }
+                    .padding(.vertical, 8)
+                    .frame(width: 350, alignment: .leading)
+
+                    Rectangle()
+                        .frame(width: 323, height: 1.5)
+                        .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255, opacity: day == weather.daily.prefix(4).last ? 0 : 0.4))
+                }
+            }
         }
         .background(Color(red:74/255, green:99/255, blue:143/255, opacity:0))
         .cornerRadius(10)

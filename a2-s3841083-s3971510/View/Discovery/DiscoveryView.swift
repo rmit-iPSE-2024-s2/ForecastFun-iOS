@@ -11,7 +11,6 @@ import SwiftData
 
 struct DiscoveryView: View {
     var location: CLLocationCoordinate2D
-    @StateObject var locationManager = LocationManager() // LocationManager instance
     var yelpManager = YelpManager() // YelpManager instance
     
     @Query var activities: [Activity]
@@ -20,7 +19,7 @@ struct DiscoveryView: View {
     @State private var isLoadingActivities = true
     
     @State private var selectedActivityIndex: Int = 0
-    
+    @Binding var selectedLocation: String?
     
     let backgroundColor = Color(red: 43/255, green: 58/255, blue: 84/255)
     let textColor = Color(red: 226/255, green: 237/255, blue: 255/255)
@@ -28,8 +27,10 @@ struct DiscoveryView: View {
     var body: some View {
         ZStack{
             backgroundColor.ignoresSafeArea(.all)
-            VStack {
-                let addedActivities = activities.filter { $0.added }
+            
+            let addedActivities = activities.filter { $0.added }
+            
+            VStack{
                 HStack{
                     Text("Discovery")
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -47,8 +48,8 @@ struct DiscoveryView: View {
                     .cornerRadius(10)
                     .padding(.top, 10)
                     .onChange(of: selectedActivityIndex) { newIndex in
+                        
                         // Fetch activity locations for the selected activity
- 
                         Task {
                             await fetchActivityLocations(
                                 latitude: location.latitude,
@@ -60,69 +61,82 @@ struct DiscoveryView: View {
                         
                     }
                 }
-                .padding(.top, 20)
-                let selectedActivity = addedActivities[selectedActivityIndex]
-                
-                Text("Locations for: \(selectedActivity.activityName)")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.system(size: 18))
-                
-                    if let activityLocations = activityLocations {
-                        ScrollView{
-                            ForEach(activityLocations.businesses, id: \.id){ business in
-
-                                if let imageUrl = business.image_url {
-                                    // Safely unwrap the imageUrl and pass it to DiscoveryCardView
-                                    DiscoveryCardView(locationName: business.name, imageUrl: imageUrl, distance: business.distance, url: business.url)
-                                        .padding(.top, 12)
-                                    Rectangle()
-                                        .frame(width: 348, height: 1)
-                                        .foregroundColor(textColor)
-                                        .opacity(0.7)
-                                        .padding(.top, 10)
-                                } else {
-                                    // Provide a fallback if the image URL is nil, like passing a default image
-                                    DiscoveryCardView(locationName: business.name, imageUrl: "", distance: business.distance, url: business.url)
-                                        .padding(.top, 12)
-                                    Rectangle()
-                                        .frame(width: 348, height: 1)
-                                        .foregroundColor(textColor)
-                                        .opacity(0.7)
-                                        .padding(.top, 10)
-                                }
-                                }
-                                
-                                Spacer()
-                                
-                            
-                        }
-                        .frame(height: 570)
-                    } else if isLoadingActivities {
-                        Spacer()
-                        ProgressView()
-                            .tint(.white)// Show loading indicator while fetching
-                            .task {
-
-                                    await fetchActivityLocations(
-                                        latitude: location.latitude,
-                                        longitude: location.longitude,
-                                        keyword: selectedActivity.activityName
-                                    )
-                                
-                            }
-                        Spacer()
+                .padding(.horizontal)
+                if !addedActivities.isEmpty {
+                    VStack {
                         
+                        let selectedActivity = addedActivities[selectedActivityIndex]
+                        
+                        Text("Locations for: \(selectedActivity.activityName)")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.system(size: 18))
+                        
+                            if let activityLocations = activityLocations {
+                                ScrollView{
+                                    ForEach(activityLocations.businesses, id: \.id){ business in
+
+                                        if let imageUrl = business.image_url {
+                                            // Safely unwrap the imageUrl and pass it to DiscoveryCardView
+                                            DiscoveryCardView(selectedLocation:$selectedLocation, locationName: business.name, imageUrl: imageUrl, distance: business.distance, url: business.url)
+                                                .padding(.top, 12)
+                                            Rectangle()
+                                                .frame(width: 348, height: 1)
+                                                .foregroundColor(textColor)
+                                                .opacity(0.7)
+                                                .padding(.top, 10)
+                                        } else {
+                                            // Provide a fallback if the image URL is nil, like passing a default image
+                                            DiscoveryCardView(selectedLocation:$selectedLocation, locationName: business.name, imageUrl: "", distance: business.distance, url: business.url)
+                                                .padding(.top, 12)
+                                            Rectangle()
+                                                .frame(width: 348, height: 1)
+                                                .foregroundColor(textColor)
+                                                .opacity(0.7)
+                                                .padding(.top, 10)
+                                        }
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                    
+                                }
+                                .frame(height: 570)
+                            } else if isLoadingActivities {
+                     
+                                ProgressView()
+                                    .tint(.white)// Show loading indicator while fetching
+                                    .task {
+
+                                            await fetchActivityLocations(
+                                                latitude: location.latitude,
+                                                longitude: location.longitude,
+                                                keyword: selectedActivity.activityName
+                                            )
+                                        
+                                    }
+                                    .frame(maxHeight: .infinity)
+                                    
+                            }
+                        
+                        
+                        else {
+                            Spacer()
+                            Text("Error finding your locations")
+                                .multilineTextAlignment(.center)
+                                .frame(width:300)
+                            Spacer()
+                        }
                     }
-                
-                
-                else {
-                    Text("Error finding your locations")
-                        .multilineTextAlignment(.center)
-                        .frame(width:300)
+                    .padding(.horizontal)
+                    .foregroundColor(textColor)
+                } else {
+                    Text("You have no added activities")
+                        .frame(height: 570)
                 }
             }
             .padding()
             .foregroundColor(textColor)
+            
         }
     }
     
@@ -141,15 +155,14 @@ struct DiscoveryView: View {
     }
 }
 
-func fetchActivityLocations(){
-    
-}
 
 #Preview {
     do {
         let previewer = try ActivityPreviewer()
+        @State var selectedLocation: String? = ""
+        
         let mockLocation = CLLocationCoordinate2D(latitude: -37.8136, longitude: 144.9631)
-        return DiscoveryView(location: mockLocation )
+        return DiscoveryView(location: mockLocation, selectedLocation: $selectedLocation )
             .modelContainer(previewer.container)
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
@@ -158,21 +171,48 @@ func fetchActivityLocations(){
 
 
 struct DiscoveryCardView : View {
+    @Binding var selectedLocation: String?
     var locationName: String
     var imageUrl: String
     var distance: Double
     var url: String
+    
+    let backgroundColor = Color(red: 43/255, green: 58/255, blue: 84/255)
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View{
         VStack{
             // Add new scheduled activity
             
             AsyncImage(url: URL(string: imageUrl)) { phase in
                 if let image = phase.image {
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 350,height: 200)
-                        .cornerRadius(6)
+                    ZStack{
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 350,height: 200)
+                            .cornerRadius(6)
+                            .padding(.bottom, 7)
+                        
+                        Button(action: {
+                                // Change the selectedLocation when the button is tapped
+                                selectedLocation = locationName
+                                presentationMode.wrappedValue.dismiss()
+                            }) {
+                                if selectedLocation != nil {
+                                    ZStack {
+                                        Image(systemName: "plus")
+                                            .font(.system(size: 30))
+                                            .padding()
+                                    }
+                                    .background(backgroundColor)
+                                    .cornerRadius(15)
+                                }
+                        }
+                            .offset(x:130, y: 60)
+                        
+                            
+                    }
                 } else if phase.error != nil {
                     Image("japan")
                         .resizable()
@@ -201,16 +241,15 @@ struct DiscoveryCardView : View {
                     
                     Spacer()
                     
-                    VStack(alignment:.trailing){
-                        Text("\((distance/1000).roundDouble()) km away")
-                        if let validUrl = URL(string: url) {
+                    VStack(alignment: .trailing,spacing: 5) {
+                        Text("\((distance / 1000).roundDouble()) km away")
+                        
+                        if let validUrl = URL(string: url), UIApplication.shared.canOpenURL(validUrl) {
                             Link("See more", destination: validUrl)
+                                .buttonStyle(PlainButtonStyle()) // Ensure the link is styled as a button
                         } else {
-                            // Handle the case where the URL is invalid
                             Text("Invalid URL")
                         }
-                        
-                        
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
