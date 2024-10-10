@@ -3,20 +3,4 @@
    uuid = "84A4F361-9093-4301-A290-316A2C3BD2E0"
    type = "1"
    version = "2.0">
-   <Breakpoints>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "30E4FA04-7B3D-403F-9439-F92D6A12B587"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../../../../var/folders/t6/92hvgp053dbckhnytxg3v30c0000gn/T/swift-generated-sources/@__swiftmacro_20a2_s3841083_s397151012ScheduleViewV10activities5QueryfMp_.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1"
-            endingLineNumber = "1">
-         </BreakpointContent>
-      </BreakpointProxy>
-   </Breakpoints>
 </Bucket>
