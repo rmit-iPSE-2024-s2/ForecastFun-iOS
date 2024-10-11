@@ -11,7 +11,8 @@ import XCTest
 @testable import a2_s3841083_s3971510
 
 final class ActivityTests: XCTestCase {
-
+    // The below tests essentially simulates adding an activity to an array of activities. This ensures that when activities are added, they are added
+    // correctly. This test is important as it makes sure that when activities are added, they are correctly displayed and do not cause any errors.
     func testAddActivity() {
         
         var activities: [Activity] = []
@@ -26,6 +27,8 @@ final class ActivityTests: XCTestCase {
     }
 }
 
+// This test essentially simulates when a user deletes an activity from the list after it has been added. This is to make sure that activities are correctly
+// removed if the user changes their mind. This is important as it ensures the list is able to be modified to the user's liking.
 func testDeleteActivity() {
     
     var activities: [Activity] = [
@@ -39,7 +42,7 @@ func testDeleteActivity() {
     
     XCTAssertEqual(activities.count, 0)
 }
-
+// This test essentially compares the current weather conditions to the defined weather conditions set in the parameters page. This ensures that activities are displayed based on the pre-determined weather conditions only. This is important as it ensures activities do not show up that do not match the pre-determined conditions.
 func testMatchingActivityConditions() {
     
     let weather = ResponseBody(
@@ -78,7 +81,7 @@ func testMatchingActivityConditions() {
     XCTAssertTrue(matchesTemp)
     XCTAssertTrue(matchesWind)
 }
-
+// This test essentialls makes sure that when the page is initialized, it displays the correct default values. This ensures the default values are set correctly to average conditions before they are manually changed. This is important as it ensures activities aren't shown in unexpected or unwanted conditions.
 func testDefaultActivityValues() {
    
     let activity = Activity(activityId: 1, activityName: "Cycling", humidityRange: [30, 60], temperatureRange: [15, 25], windRange: [0, 10], precipRange: [0, 1], keyword: "outdoor", added: true, scheduled: false)
@@ -89,7 +92,7 @@ func testDefaultActivityValues() {
     XCTAssertEqual(activity.precipRange[0], 0.0)
     XCTAssertFalse(activity.scheduled)
 }
-
+// This test essentially ensures that activities with the same activityID is not added to the list twice. This ensures duplicates are not included in the list, and is important as it can provide incorrect activities as it could contimate the conditions you are after. 
 func testPreventDuplicateActivity() {
     
     var activities: [Activity] = [
