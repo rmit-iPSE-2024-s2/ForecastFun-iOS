@@ -38,6 +38,9 @@
 		DDD0BED12C914F2200B967A3 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD0BED02C914F2200B967A3 /* Item.swift */; };
 		DDD0BED32C914F2800B967A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDD0BED22C914F2800B967A3 /* Assets.xcassets */; };
 		DDD0BED62C914F2800B967A3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDD0BED52C914F2800B967A3 /* Preview Assets.xcassets */; };
+		DDD1BE842CB8AF6B006384B5 /* ExpandableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD1BE832CB8AF6B006384B5 /* ExpandableView.swift */; };
+		DDD1BE862CB8B0B3006384B5 /* ThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD1BE852CB8B0B3006384B5 /* ThumbnailView.swift */; };
+		DDD1BE882CB8B0E4006384B5 /* ExpandedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD1BE872CB8B0E4006384B5 /* ExpandedView.swift */; };
 		DDEC79752CB6897300CA614C /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEC79742CB6897300CA614C /* ScheduleView.swift */; };
 		DDEC79772CB6A97000CA614C /* YelpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEC79762CB6A97000CA614C /* YelpManager.swift */; };
 		DDEC79792CB6ADF200CA614C /* DiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEC79782CB6ADF200CA614C /* DiscoveryView.swift */; };
@@ -77,6 +80,9 @@
 		DDD0BED02C914F2200B967A3 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		DDD0BED22C914F2800B967A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DDD0BED52C914F2800B967A3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DDD1BE832CB8AF6B006384B5 /* ExpandableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandableView.swift; sourceTree = "<group>"; };
+		DDD1BE852CB8B0B3006384B5 /* ThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailView.swift; sourceTree = "<group>"; };
+		DDD1BE872CB8B0E4006384B5 /* ExpandedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedView.swift; sourceTree = "<group>"; };
 		DDEC79742CB6897300CA614C /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
 		DDEC79762CB6A97000CA614C /* YelpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YelpManager.swift; sourceTree = "<group>"; };
 		DDEC79782CB6ADF200CA614C /* DiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryView.swift; sourceTree = "<group>"; };
@@ -166,6 +172,9 @@
 				DDB82F5C2C9158E600CF8FBB /* SplashScreenView.swift */,
 				DDB82F562C9158E500CF8FBB /* TriangleLayout.swift */,
 				DD4783412CA3E52E002317AC /* StartupView.swift */,
+				DDD1BE832CB8AF6B006384B5 /* ExpandableView.swift */,
+				DDD1BE852CB8B0B3006384B5 /* ThumbnailView.swift */,
+				DDD1BE872CB8B0E4006384B5 /* ExpandedView.swift */,
 			);
 			path = Fragments;
 			sourceTree = "<group>";
@@ -321,6 +330,7 @@
 				DDB82F682C9158E600CF8FBB /* ContentView.swift in Sources */,
 				DDB82F662C9158E600CF8FBB /* RecActivityView.swift in Sources */,
 				DDB82F692C9158E600CF8FBB /* sampleData.swift in Sources */,
+				DDD1BE862CB8B0B3006384B5 /* ThumbnailView.swift in Sources */,
 				DDB82F652C9158E600CF8FBB /* HomeScreen.swift in Sources */,
 				920C18A12CB49E2700B73848 /* ActivityListView.swift in Sources */,
 				920C18A52CB49E5900B73848 /* SetParametersView.swift in Sources */,
@@ -338,10 +348,12 @@
 				DDD0BED12C914F2200B967A3 /* Item.swift in Sources */,
 				DDB82F632C9158E600CF8FBB /* TriangleLayout.swift in Sources */,
 				DD6E29B32CB11CBD009B07D4 /* ConditionRecommendation.swift in Sources */,
+				DDD1BE882CB8B0E4006384B5 /* ExpandedView.swift in Sources */,
 				DDEC79792CB6ADF200CA614C /* DiscoveryView.swift in Sources */,
 				DDB82F6B2C9158E600CF8FBB /* DiscoveryScroll.swift in Sources */,
 				DDD0BECD2C914F2200B967A3 /* a2_s3841083_s3971510App.swift in Sources */,
 				924651BD2CA93861007D771B /* Activity.swift in Sources */,
+				DDD1BE842CB8AF6B006384B5 /* ExpandableView.swift in Sources */,
 				DDBF25272CA789A5007E6CF4 /* HourlyForecastManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

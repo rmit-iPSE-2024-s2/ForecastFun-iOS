@@ -13,6 +13,9 @@ struct ScheduleView: View {
     @Query var activities: [Activity]
     var weather: ResponseBody
     var location: CLLocationCoordinate2D
+    @State var showDeleteAlert: Bool = false
+    @State var showInfoAlert: Bool = false
+    @Environment(\.modelContext) private var modelContext
     
     @State private var selectedDayIndex: Int = 0
     
@@ -31,11 +34,27 @@ struct ScheduleView: View {
             backgroundColor.ignoresSafeArea(.all)
             
             VStack {
-                Text("Scheduled Activities")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.system(size: 30))
-                    .padding(.top, 40)
-                
+                HStack{
+                    Text("Scheduled Activities")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size: 30))
+                        .padding(.top, 40)
+                    
+                    Button(action: {
+                       showInfoAlert = true
+                    }) {
+                        Image(systemName: "info.circle")
+                            .font(.system(size: 22))
+                            .foregroundColor(textColor)
+                    }
+                    .alert(isPresented: $showInfoAlert) {
+                        Alert(title: Text("Viewing Scheduled Activities"),
+                              message: Text("To have a full view of your activities, long press to select a schedule and swipe down to reveal its info."),
+                              dismissButton: .default(Text("Got it!")))
+                    }
+                    .padding(.top, 43)
+                }
+                .padding(.horizontal, 6)
                 Picker("Select a Day", selection: $selectedDayIndex) {
                     ForEach(0..<dayForecasts.count, id: \.self) { index in
                         Text("\(dayForecasts[index].dt.convertToDayOfWeek())")
@@ -69,9 +88,209 @@ struct ScheduleView: View {
                                 
                         } else {
                             ForEach(filteredActivities, id: \.activityId) { activity in // if scheduled activities are present for selected day
-                                scheduleCardView(activity: activity, weather: weather, weatherDate: selectedDay)
-                                    .padding(.bottom, 10)
+                                let locationText = (activity.location?.isEmpty == false ? activity.location : "TBD") ?? "TBD"
+                                let conditionText = activity.conditionText ?? "No Conditions"
+                                let scheduledDay = activity.start ?? 0
+                                
+                                ExpandableView(thumbnail:
+                                ThumbnailView(content:{
+                                    
+                                    
+                                    HStack{
+                                        VStack(spacing:2){
+                                            Text("DAY")
+                                                .fontWeight(.bold)
+                                            Text("\(scheduledDay.convertToDayOfWeek())")
+                                                .textCase(.uppercase)
+                                                .fontWeight(.light)
+                                        }
+                                        .padding()
+                                        .font(.system(size: 24))
+                                        
+                                        VStack(spacing: 10){
+                                            Text("\(activity.activityName) @ \(locationText)")
+                                                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                                            Text("\(conditionText)")
+                                                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                                        }
+                                        .padding(.vertical)
+                                    }
+                                })
+                                , expanded:
+                                ExpandedView(content:{
+                                    VStack(spacing: 15){
+                                        VStack(spacing: 5){
+                                            Text("\(activity.activityName)")
+                                                .font(.system(size: 25))
+                                                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                                            
+                                            Text("\(scheduledDay.convertToFullDayOfWeek()) @ \(locationText)")
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                        
+                                        Rectangle()
+                                            .frame(width: 338, height: 1)
+                                            .foregroundColor(Color(red: 226 / 255, green: 237 / 255, blue: 255 / 255))
+                                        
+                                        Text("Projected weather parameters")
+                                        VStack(spacing:20){
+                                            HStack{
+                                                
+                                                VStack(alignment: .leading){
+                                                    Text("Temperature °C")
+                                                        .font(.system(size:17))
+                                                        .padding(.bottom, 0.5)
+                                                    HStack{
+                                                        Image(systemName :"thermometer")
+                                                            .font(.system(size:18))
+                                                        
+                                                        Text("\(dayForecasts[selectedDayIndex].temp.day.roundDouble())")
+                                                            .font(.system(size:25))
+                                                            .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                                                    }
+                                                    .padding(.bottom,-1)
+                                                    Rectangle()
+                                                        .frame(height: 3)
+                                                        .foregroundColor(determineInRange(conditionRange: activity.temperatureRange, currentCondition: dayForecasts[selectedDayIndex].temp.day)) // dynamic color that changes based on whether it is within range
+                                                        .opacity(0.7)
+                                                    
+                                                    Text("Ideal: \(activity.temperatureRange.first?.roundDouble() ?? "") - \(activity.temperatureRange.last?.roundDouble() ?? "") °C")
+                                                        .font(.system(size:15))
+                                                    
+                                                }
+                                                .frame(width: 130)
+                                                
+                                                Spacer()
+                                                
+                                                VStack(alignment: .leading){
+                                                    Text("Precipitation mm")
+                                                        .font(.system(size:17))
+                                                        .padding(.bottom, 0.5)
+                                                    HStack{
+                                                        Image(systemName :"drop")
+                                                            .font(.system(size:18))
+                                                        
+                                                        Text("\(String(format: "%.1f", dayForecasts[selectedDayIndex].dailyPrecipitation))")
+                                                            .font(.system(size:25))
+                                                            .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                                                    }
+                                                    .padding(.bottom,-1)
+                                                    Rectangle()
+                                                        .frame(height: 3)
+                                                        .foregroundColor(determineInRange(conditionRange: activity.precipRange, currentCondition: dayForecasts[selectedDayIndex].dailyPrecipitation))
+                                                        .opacity(0.7)
+                                                    
+                                                    Text("Ideal: \(activity.precipRange.first?.roundDouble() ?? "") - \(activity.precipRange.last?.roundDouble() ?? "") mm")
+                                                        .font(.system(size:15))
+                                                    
+                                                }
+                                                .frame(width: 130)
+                                                
+                                                
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .padding([.top, .horizontal],12)
+                                            
+                                            
+                                            
+                                            // Preview for humidity and wind
+                                            VStack(spacing:20){
+                                                HStack{
+                                                    
+                                                    VStack(alignment: .leading){
+                                                        Text("Humidity %")
+                                                            .font(.system(size:17))
+                                                            .padding(.bottom, 0.5)
+                                                        HStack{
+                                                            Image(systemName :"humidity")
+                                                                .font(.system(size:18))
+                                                            
+                                                            Text("\(dayForecasts[selectedDayIndex].humidity)")
+                                                                .font(.system(size:25))
+                                                                .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                                                        }
+                                                        .padding(.bottom,-1)
+                                                        Rectangle()
+                                                            .frame(height: 3)
+                                                            .foregroundColor(determineInRange(
+                                                                conditionRange: activity.humidityRange.map { Double($0) },
+                                                                currentCondition: Double(dayForecasts[selectedDayIndex].humidity)
+                                                            ))
+                                                            .opacity(0.7)
+                                                        Text("Ideal: \(activity.humidityRange.first ?? 0) - \(activity.humidityRange.last ?? 0) %")
+                                                            .font(.system(size:15))
+                                                        
+                                                    }
+                                                    .frame(width: 130)
+                                                    
+                                                    Spacer()
+                                                    
+                                                    VStack(alignment: .leading){
+                                                        Text("Wind km/h")
+                                                            .font(.system(size:17))
+                                                            .padding(.bottom, 0.5)
+                                                        HStack{
+                                                            Image(systemName :"wind")
+                                                                .font(.system(size:18))
+                                                            
+                                                            Text("\(dayForecasts[selectedDayIndex].wind_speed.roundDouble())")
+                                                                .font(.system(size:25))
+                                                                .foregroundColor(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 1.0))
+                                                        }
+                                                        .padding(.bottom,-1)
+                                                        Rectangle()
+                                                            .frame(height: 3)
+                                                            .foregroundColor(determineInRange(conditionRange: activity.windRange, currentCondition: dayForecasts[selectedDayIndex].wind_speed))
+                                                            .opacity(0.7)
+                                                        
+                                                        Text("Ideal: \(activity.windRange.first?.roundDouble() ?? "") - \(activity.windRange.last?.roundDouble() ?? "") km/h")
+                                                            .font(.system(size:15))
+                                                        
+                                                    }
+                                                    .frame(width: 130)
+                                                    
+                                                    
+                                                }
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                .padding(.horizontal, 12)
+                                                
+                                                
+                                            }
+                                        }
+                                        .padding(.horizontal)
+                                        
+                                        Button(action: {
+                                            showDeleteAlert = true // Show the delete alert
+                                        }) {
+                                            Text("Remove")
+                                        }
+                                        .padding(10)
+                                        .background(Color(red:36/255, green:50/255, blue: 71/255, opacity: 1))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .stroke(Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.4), lineWidth: 1)
+                                        )
+                                        .alert(isPresented: $showDeleteAlert) {
+                                            Alert(
+                                                title: Text("Delete Activity"),
+                                                message: Text("Are you sure you want to delete this activity?"),
+                                                primaryButton: .destructive(Text("Delete")) {
+                                                    deleteActivity(activity:activity)
+                                                },
+                                                secondaryButton: .cancel()
+                                                
+                                            )
+                                        }
+
+                                        
+                                    }
+                                    .padding()
+                                }))
+                                
                             }
+                            
+                            
+                            
                         }
                     }
                     .padding(.vertical, 20)
@@ -92,9 +311,14 @@ struct ScheduleView: View {
             .padding()
             .foregroundColor(textColor)
         }
+        
     }
     
+    func deleteActivity(activity: Activity) {
+            modelContext.delete(activity) // Remove the activity from the context
+            try? modelContext.save() // Save the context to persist the changes
     }
+}
 
 #Preview {
     do {

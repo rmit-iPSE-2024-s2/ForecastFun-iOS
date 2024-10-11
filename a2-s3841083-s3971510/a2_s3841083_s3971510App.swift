@@ -25,13 +25,24 @@ let appContainer: ModelContainer = {
     do {
         let container = try ModelContainer(for: Activity.self)
         
-        // Make sure the persistent store is empty. If it's not, return the non-empty container.
+        // Make sure the persistent store is empty if it's not, return the non-empty container
         var itemFetchDescriptor = FetchDescriptor<Activity>()
         itemFetchDescriptor.fetchLimit = 1
+        let allActivities = try container.mainContext.fetch(itemFetchDescriptor)
+                
+        // Get the current timestamp
+        let currentTimestamp = Date().timeIntervalSince1970
         
+        // Filter out outdated scheduled activities and delete them
+        for activity in allActivities where activity.scheduled && (activity.start != nil && Double(activity.start!) < currentTimestamp) {
+            container.mainContext.delete(activity)
+        }
+        
+        // If the persistent store is empty (on first startup) populate the database with activities
         guard try container.mainContext.fetch(itemFetchDescriptor).count == 0 else { return container }
         
         // This code will only run if the persistent store is empty.
+        // It initialises activities available to be added/scheduled by the user
         let activities = [
             Activity(
                 activityId: 1,
