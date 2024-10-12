@@ -147,3 +147,21 @@ func getConditionColorForDay(addedActivities: [Activity], currentTemp: Double, c
     return .red
 
 }
+
+func determineConditionText(activity: Activity, day: ResponseBody.DailyWeatherResponse) -> String {
+    let activityColor = determineActivityColor(
+        activity: activity,
+        currentTemp: day.temp.day,
+        currentPrecip: day.dailyPrecipitation,
+        currentHumidity: day.humidity,
+        currentWind: day.wind_speed
+    )
+    
+    if activityColor == .green {
+        return "Good Conditions"
+    } else if activityColor == .yellow {
+        return "Fair Conditions"
+    } else {
+        return "Poor Conditions"
+    }
+}

@@ -34,7 +34,7 @@ let appContainer: ModelContainer = {
         let currentTimestamp = Date().timeIntervalSince1970
         
         // Filter out outdated scheduled activities and delete them
-        for activity in allActivities where activity.scheduled && (activity.start != nil && Double(activity.start!) < currentTimestamp) {
+        for activity in allActivities where (activity.start != nil && Double(activity.start!) < currentTimestamp) {
             container.mainContext.delete(activity)
         }
         

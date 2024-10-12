@@ -115,7 +115,3 @@ struct ResponseBody: Decodable {
         }
     }
 }
-
-
-
-// Response body for 4 day view

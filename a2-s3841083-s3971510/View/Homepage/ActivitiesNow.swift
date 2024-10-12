@@ -41,15 +41,11 @@ struct ActivityView: View {
     }
     
 
-    private var conditionText: String {
-        let activityColor = determineActivityColor(activity: activity, currentTemp: temp, currentPrecip: precip, currentHumidity: humidity, currentWind: wind)
-        if activityColor == .green {
-            return "Good Conditions"
-        } else if activityColor == .yellow{
-            return "Fair Conditions"
-        } else {
-            return "Poor Conditions"
+    private var conditionText: String{
+        if let weatherDay = weatherDay{
+            return determineConditionText(activity: activity, day: weatherDay )
         }
+        return "No Conditions"
     }
     
     private var bgColor: Color {

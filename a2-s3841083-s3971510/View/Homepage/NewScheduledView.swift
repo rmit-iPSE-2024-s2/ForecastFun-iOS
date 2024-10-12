@@ -17,20 +17,11 @@ struct NewScheduleView: View {
     @Environment(\.modelContext) private var context
     
     var location: CLLocationCoordinate2D
-    //    @State private var location: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
     
     @State var selectedLocation: String? = ""
     
-    private var conditionText: String {
-        let activityColor = determineActivityColor(activity: selectedActivity, currentTemp: selectedDay.temp.day, currentPrecip: selectedDay.dailyPrecipitation, currentHumidity: selectedDay.humidity, currentWind: selectedDay.wind_speed)
-        
-        if activityColor == .green {
-            return "Good Conditions"
-        } else if activityColor == .yellow{
-            return "Fair Conditions"
-        } else {
-            return "Poor Conditions"
-        }
+    private var conditionText: String{
+        return determineConditionText(activity: selectedActivity, day: selectedDay)
     }
     
     var body: some View {
