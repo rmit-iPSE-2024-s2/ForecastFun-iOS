@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import CoreLocation
 struct SplashScreenView: View {
     @State private var isActive = false
     @State private var size = 0.8
@@ -14,16 +14,33 @@ struct SplashScreenView: View {
     @StateObject var locationManager = LocationManager()
     var weatherManager = WeatherManager()
     @State var weather: ResponseBody?
-    
+
+
     var body: some View {
         // change t
         if isActive{
             
-            if let location = locationManager.location{
+            if let location = locationManager.retrieveSavedLocation() {
                 if let weather = weather {
                     MainTabbedView(weather: weather, location: location)
                 } else{
                     ProgressView()
+                        .tint(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0))
+                        .task{
+                            do{
+                                weather = try await weatherManager.getCurrentWeather(latitude: location.latitude, longitude: location.longitude)
+                            }catch{
+                                print("Error fetching weather data")
+                            }
+                        }
+                }
+            }
+            else if let location = locationManager.location{
+                if let weather = weather {
+                    MainTabbedView(weather: weather, location: location)
+                } else{
+                    ProgressView()
+                        .tint(Color(red: 36/255, green:34/255 , blue: 49/255, opacity: 1.0))
                         .task{
                             do{
                                 weather = try await weatherManager.getCurrentWeather(latitude: location.latitude, longitude: location.longitude)
@@ -79,7 +96,7 @@ struct SplashScreenView: View {
             }
         }
         }
-        
+    
 }
 
 #Preview {

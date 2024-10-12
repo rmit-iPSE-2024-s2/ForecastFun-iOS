@@ -37,10 +37,16 @@ struct DiscoveryView: View {
                         .font(.system(size: 30))
                     
                     Picker("Select an Activity", selection: $selectedActivityIndex) {
-                        ForEach(0..<addedActivities.count, id: \.self) { index in
-                            Text(addedActivities[index].activityName)
-                                .tint(.white)
-                                .tag(index)
+                        //display no activities if there are no added activities
+                        if addedActivities.isEmpty {
+                                Text("No Activities")
+                                    .tag(-1) // Use a special tag to indicate no activity
+                        } else {
+                            ForEach(0..<addedActivities.count, id: \.self) { index in
+                                Text(addedActivities[index].activityName)
+                                    .tint(.white)
+                                    .tag(index)
+                            }
                         }
                     }
                     .pickerStyle(MenuPickerStyle())

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 extension Double{
     func roundDouble() -> String{
@@ -31,5 +32,21 @@ extension Int {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE"
         return dateFormatter.string(from: date)
+    }
+}
+
+extension UserDefaults {
+    func savedLocation() -> CLLocationCoordinate2D? {
+            let latitude = double(forKey: "userLatitude")
+            let longitude = double(forKey: "userLongitude")
+            
+            guard latitude != 0.0 || longitude != 0.0 else { return nil }
+            
+            return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    func saveLocation(latitude: Double, longitude: Double) {
+            set(latitude, forKey: "userLatitude")
+            set(longitude, forKey: "userLongitude")
     }
 }
