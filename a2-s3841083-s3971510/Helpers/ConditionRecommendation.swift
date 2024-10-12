@@ -8,14 +8,65 @@
 import Foundation
 import SwiftUI
 
-/// Returns the necessary colour for the activity, based on whether the given parameters are within in range
+/// Returns the necessary color for the activity, based on whether the given parameters are within range.
+///
+/// This function evaluates the current weather conditions against an activity's preferred conditions (temperature, precipitation, humidity, and wind). It returns a color that indicates how suitable the weather is for the activity:
+/// - Green: If all conditions are within the preferred range of the activity.
+/// - Yellow: If three conditions are within the range.
+/// - Red: If one or no conditions are within the range.
+///
 /// - Parameters:
-///   - activity: The given activity that the user had added to their liked activities
-///   - currentTemp: the given temperature based off OpenWeatherAPI
-///   - currentPrecip: the given temperature based off OpenWeatherAPI
-///   - currentHumidity: the given temperature based off OpenWeatherAPI
-///   - currentWind: the given temperature based off OpenWeatherAPI
-/// - Returns: A color - green if all conditions are within the preferred range of the activity, yellow if 3 conditions are within the range, and red if 1, or no conditions are within the range
+///   - activity: The `Activity` object representing the user’s added activity, containing preferred ranges for temperature, precipitation, humidity, and wind.
+///   - currentTemp: The current temperature retrieved from the OpenWeatherAPI.
+///   - currentPrecip: The current precipitation level retrieved from the OpenWeatherAPI.
+///   - currentHumidity: The current humidity level retrieved from the OpenWeatherAPI.
+///   - currentWind: The current wind speed retrieved from the OpenWeatherAPI.
+///
+/// - Returns: A `Color` indicating the suitability of the weather for the activity:
+///   - Green if all conditions are within the preferred range.
+///   - Yellow if three conditions are within the range.
+///   - Red if one or no conditions are within the range.
+///
+/// - Example:
+/// ```swift
+/// let hikingActivity = Activity(
+///     activityId: 1,
+///     activityName: "Hiking",
+///     humidityRange: [30, 60],
+///     temperatureRange: [15.0, 25.0],
+///     windRange: [0.0, 10.0],
+///     precipRange: [0.0, 5.0],
+///     keyword: "Outdoor",
+///     added: true,
+///     scheduled: false
+/// )
+///
+/// let currentTemperature = 22.0   // Current temperature
+/// let currentPrecipitation = 1.0   // Current precipitation
+/// let currentHumidity = 45         // Current humidity
+/// let currentWindSpeed = 5.0       // Current wind speed
+///
+/// let resultColor = determineActivityColor(
+///     activity: hikingActivity,
+///     currentTemp: currentTemperature,
+///     currentPrecip: currentPrecipitation,
+///     currentHumidity: currentHumidity,
+///     currentWind: currentWindSpeed
+/// )
+///
+/// print(resultColor) // Output: .green
+///
+/// // Example with mixed conditions
+/// let resultColor2 = determineActivityColor(
+///     activity: hikingActivity,
+///     currentTemp: 30.0, // Too hot
+///     currentPrecip: 10.0, // Too much rain
+///     currentHumidity: 80, // Too humid
+///     currentWind: 3.0 // Within range
+/// )
+///
+/// print(resultColor2) // Output: .red
+/// ```
 func determineActivityColor(activity: Activity, currentTemp: Double, currentPrecip: Double, currentHumidity: Int, currentWind: Double) -> Color {
     // Check if each condition is in range
     let tempInRange = determineInRange(conditionRange: activity.temperatureRange, currentCondition: currentTemp)
@@ -39,11 +90,41 @@ func determineActivityColor(activity: Activity, currentTemp: Double, currentPrec
     }
 }
 
-/// Returns a color by determining whether a condition is within an activity's preferred range
+/// Returns a color by determining whether a condition is within an activity's preferred range.
+///
+/// This function evaluates whether the current weather condition (e.g., temperature, humidity, wind, or precipitation) falls within an activity's preferred range. It returns a color indicating how well the current condition fits the activity's range:
+/// - Green: If the current condition is within the optimal range.
+/// - Yellow: If the condition is within a partial range (up to +/- 2.01 units beyond the preferred range).
+/// - Red: If the condition falls outside both ranges.
+///
 /// - Parameters:
-///   - conditionRange: the preferred condition range of the activity
-///   - currentCondition: weather condition (temp, precipitation, humidity, wind)
-/// - Returns: returns a color based off whether the condition value sits within the given range, green if it sits perfectly within the range, yellow if it sits +/- 3 of the range, and red if doesn't otherwise
+///   - conditionRange: A two-element array representing the preferred condition range of the activity (e.g., `[lowerBound, upperBound]`).
+///   - currentCondition: The current weather condition (e.g., temperature, precipitation, humidity, wind).
+///
+/// - Returns: A `Color` indicating whether the condition fits:
+///   - Green if the condition is within the optimal range.
+///   - Yellow if the condition is within a partial range (within +/- 2.01 units of the range).
+///   - Red if it falls outside both ranges.
+///
+/// - Example:
+/// ```swift
+/// let temperatureRange = [15.0, 25.0] // Activity's preferred temperature range
+/// let currentTemperature = 17.0 // Current temperature
+///
+/// let resultColor = determineInRange(conditionRange: temperatureRange, currentCondition: currentTemperature)
+///
+/// print(resultColor) // Output: .green
+///
+/// let currentTemperature2 = 13.0
+/// let resultColor2 = determineInRange(conditionRange: temperatureRange, currentCondition: currentTemperature2)
+///
+/// print(resultColor2) // Output: .yellow
+///
+/// let currentTemperature3 = 5.0
+/// let resultColor3 = determineInRange(conditionRange: temperatureRange, currentCondition: currentTemperature3)
+///
+/// print(resultColor3) // Output: .red
+/// ```
 func determineInRange(conditionRange: [Double], currentCondition:Double) -> Color{
     let lowerBound = conditionRange[0]
     let upperBound = conditionRange[1]
@@ -68,18 +149,24 @@ func determineInRange(conditionRange: [Double], currentCondition:Double) -> Colo
     }
 }
 
-
-// create a function that gets the weather of a day, checks if the conditions of the activity for that days weather
-// returns green if at least half of the activities have good conditions
-// returns yellow if less than half of the activities have good conditions
-// returns red if no activities have good conditions
-
-// create navigation where they can add activities
-// it will create a variable activity and add scheduled to it with a time (day) for you to do it
-// you can add a location or you can skip
-// and then previews what you added
-
-
+/// Retrieves the weather data for a specific date from the provided weather response.
+///
+/// This function searches through the daily weather data contained in the `ResponseBody` object to find the weather information that matches the specified date (as a Unix timestamp). If a match is found, it returns the corresponding `DailyWeatherResponse`, otherwise it returns `nil`.
+///
+/// - Parameters:
+///   - date: The Unix timestamp (in seconds) representing the date for which the weather information is required.
+///   - data: The weather response data containing daily weather entries, typically retrieved from a weather API.
+///
+/// - Returns: An optional `ResponseBody.DailyWeatherResponse` object that contains the weather information for the specified date. If no matching weather data is found for the given date, the function returns `nil`.
+///
+/// - Example:
+/// ```swift
+/// if let weather = getWeatherForDate(date: targetDate, data: responseBody) {
+///     print("Weather for the given date: \(weather)")
+/// } else {
+///     print("No weather data available for the given date.")
+/// }
+/// ```
 func getWeatherForDate(date: Int, data: ResponseBody) -> ResponseBody.DailyWeatherResponse? {
     // Check if the date matches the current weather
     // Check if the date matches any daily weather entries
@@ -114,7 +201,23 @@ func getWeatherForDate(date: Int, data: ResponseBody) -> ResponseBody.DailyWeath
 ///   - Green if more than half of the activities are in good condition.
 ///   - Yellow if some are in good condition, but not the majority.
 ///   - Red if none of the activities are in good condition.
-
+///
+/// - Example:
+/// ```swift
+/// let addedActivities = [
+///     Activity(activityId: 1, activityName: "Running", humidityRange: [30, 60], temperatureRange: [10.0, 20.0], windRange: [0.0, 5.0], precipRange: [0.0, 0.5], keyword: "outdoor", added: true, scheduled: false),
+///     Activity(activityId: 2, activityName: "Cycling", humidityRange: [20, 50], temperatureRange: [15.0, 25.0], windRange: [0.0, 8.0], precipRange: [0.0, 0.3], keyword: "outdoor", added: true, scheduled: false)
+/// ]
+///
+/// let currentTemp = 18.0
+/// let currentPrecip = 0.1
+/// let currentHumidity = 40
+/// let currentWind = 3.0
+///
+/// let overallConditionColor = getConditionColorForDay(addedActivities: addedActivities, currentTemp: currentTemp, currentPrecip: currentPrecip, currentHumidity: currentHumidity, currentWind: currentWind)
+///
+/// print(overallConditionColor) // Output: .green
+/// ```
 func getConditionColorForDay(addedActivities: [Activity], currentTemp: Double, currentPrecip: Double, currentHumidity: Int, currentWind: Double) -> Color {
     
     // Initialize the array of Colors
@@ -148,20 +251,3 @@ func getConditionColorForDay(addedActivities: [Activity], currentTemp: Double, c
 
 }
 
-func determineConditionText(activity: Activity, day: ResponseBody.DailyWeatherResponse) -> String {
-    let activityColor = determineActivityColor(
-        activity: activity,
-        currentTemp: day.temp.day,
-        currentPrecip: day.dailyPrecipitation,
-        currentHumidity: day.humidity,
-        currentWind: day.wind_speed
-    )
-    
-    if activityColor == .green {
-        return "Good Conditions"
-    } else if activityColor == .yellow {
-        return "Fair Conditions"
-    } else {
-        return "Poor Conditions"
-    }
-}

@@ -1,6 +1,8 @@
 import SwiftUI
 import SwiftData
 import CoreLocation
+
+/// Displays the home screen from the navigation controller
 struct HomeView: View {
     var weather: ResponseBody
     var location: CLLocationCoordinate2D
@@ -10,7 +12,8 @@ struct HomeView: View {
     }
 }
 
-struct PinView: View {
+/// Displays the DiscoveryView from the navigation controller
+struct MapView: View {
 
     var location: CLLocationCoordinate2D
     @State private var selectedLocation: String? = nil
@@ -21,8 +24,8 @@ struct PinView: View {
     }
 }
 
-
-struct WalkView: View {
+/// Displays the ActivityListView from the navigation controller
+struct TargetView: View {
     @Environment(\.modelContext) private var context
     
     var body: some View {
@@ -30,7 +33,8 @@ struct WalkView: View {
     }
 }
 
- struct ClockView: View {
+/// Displays the ScheduleView  from the navigation controller
+ struct CalendarView: View {
      var weather: ResponseBody
      var location: CLLocationCoordinate2D
      var body: some View {
@@ -38,21 +42,25 @@ struct WalkView: View {
      }
  }
 
+/// An enumeration representing the items in a tabbed interface.
+///
+/// This enum defines the different tabs available in the tabbed interface of the application.
+/// Each case represents a specific tab and provides a title and icon associated with it.
 enum TabbedItems: Int, CaseIterable {
     case home = 0
-    case pin
-    case walk
-    case clock
+    case map
+    case target
+    case calendar
     
     var title: String {
         switch self {
         case .home:
             return "Home"
-        case .pin:
+        case .map:
             return "Discover"
-        case .walk:
+        case .target:
             return "Activities"
-        case .clock:
+        case .calendar:
             return "Schedule"
         }
     }
@@ -61,16 +69,17 @@ enum TabbedItems: Int, CaseIterable {
         switch self {
         case .home:
             return "house"
-        case .pin:
+        case .map:
             return "map"
-        case .walk:
+        case .target:
             return "target"
-        case .clock:
+        case .calendar:
             return "calendar"
         }
     }
 }
 
+/// View for the navigation tab bar
 struct MainTabbedView: View {
     var weather: ResponseBody
     var location: CLLocationCoordinate2D
@@ -81,11 +90,11 @@ struct MainTabbedView: View {
             TabView(selection: $selectedTab) {
                 HomeScreen(weather: weather, location: location)
                     .tag(0)
-                PinView(location: location)
+                MapView(location: location)
                     .tag(1)
-                WalkView()
+                TargetView()
                     .tag(2)
-                ClockView(weather: weather, location: location)
+                CalendarView(weather: weather, location: location)
                    .tag(3)
             }
             ZStack {
@@ -109,6 +118,26 @@ struct MainTabbedView: View {
 
 
 extension MainTabbedView {
+    
+    /// Creates a custom tab item view with an icon and active state.
+    ///
+    /// This function generates a tab item with an image and a visual representation
+    /// that indicates whether the tab is currently active or not. The tab item is styled
+    /// with a specific size and color that changes based on the active state.
+    ///
+    /// - Parameters:
+    ///   - imageName: A `String` representing the name of the system image to display
+    ///     in the tab item. This should correspond to an image in the SF Symbols library.
+    ///   - isActive: A `Bool` indicating whether the tab item is currently active.
+    ///     If `true`, the item will be rendered with full opacity; if `false`, it will
+    ///     appear with reduced opacity.
+    ///
+    /// - Returns: A view that displays the tab item with the specified icon and state.
+    ///
+    /// Usage Example:
+    /// ```
+    /// CustomTabItem(imageName: "house", isActive: true)
+    /// ```
     func CustomTabItem(imageName: String, isActive: Bool) -> some View {
         HStack {
             Spacer()

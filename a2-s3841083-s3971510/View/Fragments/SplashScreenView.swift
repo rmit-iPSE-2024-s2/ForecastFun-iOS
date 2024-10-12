@@ -7,6 +7,8 @@
 
 import SwiftUI
 import CoreLocation
+
+/// Splash screen that previews the logo and introduces the app to the app
 struct SplashScreenView: View {
     @State private var isActive = false
     @State private var size = 0.8

@@ -7,10 +7,17 @@
 
 import Foundation
 
-// Preview weather data, loaded from the JSON file for testing and SwiftUI previews
+/// Preview weather data, loaded from the JSON file for testing and SwiftUI previews
 var previewWeather: ResponseBody = load("weatherData.json")
 
-// Function to load and decode the JSON data into the ResponseBody struct
+/// Loads and decodes example weather JSON data for preview from a specified file into a `Decodable` type.
+///
+/// This generic function attempts to locate a file in the app's main bundle, load its contents as `Data`,
+/// and then decode it into the specified type `T`, which must conform to the `Decodable` protocol.
+///
+/// - Parameter filename: The name of the JSON file to be loaded (including extension).
+/// - Returns: An instance of the specified type `T`, populated with the decoded data from the JSON file.
+/// - Throws: An error if the file cannot be found, cannot be loaded, or if the data cannot be decoded into the expected type.
 func load<T: Decodable>(_ filename: String) -> T {
     let data: Data
 
@@ -37,59 +44,5 @@ func load<T: Decodable>(_ filename: String) -> T {
     }
 }
 
-// Extension to ResponseBody for calculating precipitation based on the current weather
-extension ResponseBody {
-    // Property to return the precipitation amount (in mm), based on the current weather
-    var precipitation: Double {
-        // Check current weather for rain
-        if let rainAmount = current.rain?.oneHour {
-            return rainAmount
-        } else {
-            return 0.0 // No chance of rain
-        }
-    }
-
-    // Property to return daily precipitation amount (in mm)
-    var dailyPrecipitation: Double {
-        // Assuming daily is an array of daily weather data
-        var totalPrecipitation: Double = 0.0
-        for dailyEntry in daily {
-            if let rainAmount = dailyEntry.rain {
-                totalPrecipitation += rainAmount
-            } else  {
-                totalPrecipitation += 0.0 // No chance of rain
-            }
-        }
-        return totalPrecipitation
-    }
-}
-
-extension ResponseBody.CurrentWeatherResponse {
-    // Property to return the precipitation amount (in mm), based on the current weather
-    var precipitation: Double {
-        // Check current weather for rain
-        if let rainAmount = rain?.oneHour {
-            return rainAmount
-        } else {
-            return 0.0 // No chance of rain
-        }
-    }
-
-    // Property to return daily precipitation amount (in mm)
-
-}
-
-
-extension ResponseBody.DailyWeatherResponse {
-    // Property to return the precipitation amount (in mm), based on the current weather
-    var dailyPrecipitation: Double {
-        if let rainAmount = rain {
-            return rainAmount
-        } else  {
-            return 0.0 // No chance of rain
-        }
-        
-    }
-}
 
 

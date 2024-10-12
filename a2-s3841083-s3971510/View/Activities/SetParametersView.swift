@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+/// View that displays sliders for the user edit their desired range for their activities
 struct SetParametersView: View {
     @State var activity: Activity
     let onSave: (Activity) -> Void

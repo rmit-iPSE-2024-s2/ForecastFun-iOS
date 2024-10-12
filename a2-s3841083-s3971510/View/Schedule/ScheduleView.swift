@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import CoreLocation
 
+/// View for displaying scheduled activities across different days
 struct ScheduleView: View {
     @Query var activities: [Activity]
     var weather: ResponseBody
@@ -153,7 +154,7 @@ struct ScheduleView: View {
 }
 
 
-
+/// Card view to allow users to create a new scheduled activity on the home page
 struct newSchedCardView : View{
     @Query var activities: [Activity]
     var activity: Activity
@@ -221,6 +222,7 @@ struct newSchedCardView : View{
     }
 }
 
+/// Card view that displays shorthanded iinformation about a scheduled activity, i.e. location, conditions, activity, and day
 struct scheduleCardView : View{
     @Query var activities: [Activity]
     var activity: Activity
@@ -278,6 +280,7 @@ struct scheduleCardView : View{
     }
 }
 
+///Displays the thumbnail view content including shorthanded weather conditions and location for scheduled activity
 struct ThumbnailViewContent: View {
     var activityName: String
     var scheduledDay: Int
@@ -307,6 +310,7 @@ struct ThumbnailViewContent: View {
     }
 }
 
+/// Displays the expanded view content including the weather conditions for scheduled activity
 struct ExpandedViewContent: View {
     var activity: Activity
     var dayForecast: ResponseBody.DailyWeatherResponse
@@ -398,6 +402,7 @@ struct ExpandedViewContent: View {
     }
 }
 
+/// Small view that shows an individual condition details and its suitability for an activity
 struct WeatherConditionView: View {
     var label: String
     var systemImageName: String

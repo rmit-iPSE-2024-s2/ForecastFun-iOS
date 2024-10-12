@@ -21,6 +21,7 @@ struct a2_s3841083_s3971510App: App {
 
 
 @MainActor
+/// Container to add all activities and remove out of date scheduled activities
 let appContainer: ModelContainer = {
     do {
         let container = try ModelContainer(for: Activity.self)
@@ -43,6 +44,7 @@ let appContainer: ModelContainer = {
         
         // This code will only run if the persistent store is empty.
         // It initialises activities available to be added/scheduled by the user
+        
         let activities = [
             Activity(
                 activityId: 1,
@@ -134,8 +136,6 @@ let appContainer: ModelContainer = {
             )
         ]
 
-
-        
         for activity in activities {
             container.mainContext.insert(activity)
         }

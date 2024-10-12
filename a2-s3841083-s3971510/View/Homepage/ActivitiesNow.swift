@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftData
 import CoreLocation
 
+/// Small card that previews an added activity and its conditions for the current day - i.e. through color and condition statement (e.g. Poor conditions)
 struct ActivityView: View {
     @Query var activities: [Activity]
     var activity: Activity

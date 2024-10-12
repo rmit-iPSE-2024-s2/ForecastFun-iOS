@@ -10,12 +10,13 @@ import SwiftUI
 import SwiftData
 import CoreLocation
 
+/// Displays the home page which contains a four day view, today view and functionality to add activities and schedule activities
 struct HomeScreen: View {
     
     @Environment(\.modelContext) private var context
     @StateObject var locationManager = LocationManager()
     @State private var showTodayView: Bool = true
-    @State private var forecast: UpcomingForecast? = nil
+    
     @Query var activities: [Activity]
     @State private var showAddActivitySheet = false
     
@@ -322,6 +323,7 @@ struct HomeScreen: View {
     }
 }
 
+/// Card view that displays the conditions, location and day for your next recent scheduled activity
 struct nextScheduledView : View{
     @Query var activities: [Activity]
     var activity: Activity
@@ -439,7 +441,7 @@ struct nextScheduledView : View{
 }
 
 
-
+/// View that displays forecast for the next four days alongside the weather conditions through an icon, the min and max temperature for the four days, and the colour to represent if the conditions for your activities are suitable
 struct fourDayView: View {
     var weather: ResponseBody
     var activity: Activity
@@ -623,5 +625,3 @@ struct fourDayView: View {
     }
     
 }
-
-

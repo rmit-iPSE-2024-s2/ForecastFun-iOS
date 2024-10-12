@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+/// The `ExpandableView` allows users to interact with a thumbnail view, which can be expanded
+/// to reveal more detailed information. This view supports gestures like long press and swipe
+/// to facilitate the transition between the thumbnail and the expanded view.
 struct ExpandableView: View {
     @Namespace private var namespace
     @State private var show = false

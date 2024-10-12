@@ -10,6 +10,7 @@ import SwiftData
 import Foundation
 import CoreLocation
 
+/// View that previews the conditions for a filtered activity and day
 struct PreviewConditionView: View {
     @Binding var showingPopover: Bool
     @Query var activities: [Activity]

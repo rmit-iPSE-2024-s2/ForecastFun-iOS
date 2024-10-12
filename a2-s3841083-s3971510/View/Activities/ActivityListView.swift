@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 
+/// View that list all activities that are added
 struct ActivityListView: View {
     @Environment(\.modelContext) private var context
     @Query private var activities: [Activity]

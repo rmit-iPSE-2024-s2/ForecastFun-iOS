@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A view that wraps and displays the expandable content view in a ZStack.
 struct ExpandedView: View {
     var id = UUID()
     @ViewBuilder var content: any View

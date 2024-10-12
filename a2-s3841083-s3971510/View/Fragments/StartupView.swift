@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreLocationUI
 
+/// View that appears on start up, allows user to provide location
 struct StartupView: View {
     @EnvironmentObject var locationManager: LocationManager
     

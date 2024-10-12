@@ -9,6 +9,7 @@ import SwiftUI
 import CoreLocation
 import SwiftData
 
+/// View that displays locations retrieved from the Yelp for activities based on the keyword of the activity
 struct DiscoveryView: View {
     var location: CLLocationCoordinate2D
     var yelpManager = YelpManager() // YelpManager instance
@@ -175,7 +176,7 @@ struct DiscoveryView: View {
     }
 }
 
-
+/// Displays the card view for locations to accomadate scheduled activities
 struct DiscoveryCardView : View {
     @Binding var selectedLocation: String?
     var locationName: String

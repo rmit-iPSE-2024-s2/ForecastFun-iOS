@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A view that wraps and displays the thumbnail content view in a ZStack
 struct ThumbnailView: View, Identifiable {
     var id = UUID()
     @ViewBuilder var content: any View

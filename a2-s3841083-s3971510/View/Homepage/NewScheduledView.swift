@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreLocation
 
+/// View that displays the condition for a potential scheduled activity, includes functionality to go to the view to add a location and adding the activity
 struct NewScheduleView: View {
     @Binding var showingPopover: Bool
     @State private var addedActivity: Bool = false
@@ -317,25 +318,12 @@ struct NewScheduleView: View {
             ),
             selectedDay: ResponseBody.DailyWeatherResponse(
                 dt: 1696204800, // Sample Unix timestamp for the date
-                sunrise: 1696233600,
-                sunset: 1696281600,
-                moonrise: 1696245600,
-                moonset: 1696274400,
-                moon_phase: 0.5,
-                summary: "Clear skies",
-                temp: ResponseBody.TempResponse(day: 22.0, min: 18.0, max: 26.0, night: 16.0, eve: 21.0, morn: 18.5),
-                feels_like: ResponseBody.FeelsLikeResponse(day: 22.5, night: 16.5, eve: 21.5, morn: 19.0),
-                pressure: 1012,
+                temp: ResponseBody.TempResponse(day: 22.0, min: 18.0, max: 26.0),
                 humidity: 55,
-                dew_point: 10.5,
                 wind_speed: 3.5,
-                wind_deg: 270,
-                wind_gust: 4.5,
                 weather: [ResponseBody.WeatherResponse(id: 800, main: "Clear", description: "clear sky", icon: "01d")],
-                clouds: 0,
                 pop: 0.0,
-                rain: nil,
-                uvi: 6.5
+                rain: nil
             ),
             location: mockLocation
         )

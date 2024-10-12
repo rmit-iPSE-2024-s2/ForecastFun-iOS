@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+/// View that shows the available activities that a user can added
 struct AddActivityView: View {
     let onAdd: (Activity) -> Void
     @Environment(\.presentationMode) var presentationMode
