@@ -111,6 +111,7 @@
 		DDB82F592C9158E600CF8FBB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DDB82F5A2C9158E600CF8FBB /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		DDB82F5C2C9158E600CF8FBB /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
+		DDBEE4122CBB938800B2D191 /* a2-s3841083-s3971510.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "a2-s3841083-s3971510.xctestplan"; sourceTree = "<group>"; };
 		DDCB89722CB026B3004DDDE8 /* ActivitiesNow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesNow.swift; sourceTree = "<group>"; };
 		DDD0BEC92C914F2200B967A3 /* a2-s3841083-s3971510.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "a2-s3841083-s3971510.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDD0BECC2C914F2200B967A3 /* a2_s3841083_s3971510App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = a2_s3841083_s3971510App.swift; sourceTree = "<group>"; };
@@ -155,9 +156,9 @@
 		923240622CB90E1D005F3E1C /* a2-s3841083-s3971510Tests */ = {
 			isa = PBXGroup;
 			children = (
-				923240632CB90E1D005F3E1C /* a2_s3841083_s3971510Tests.swift */,
 				DD8CEA112CB9541700DB0DE8 /* ConditionRecommendationTests.swift */,
 				DD8CEA132CBA1A6B00DB0DE8 /* RetrieveWeatherTests.swift */,
+				923240632CB90E1D005F3E1C /* a2_s3841083_s3971510Tests.swift */,
 			);
 			path = "a2-s3841083-s3971510Tests";
 			sourceTree = "<group>";
@@ -276,6 +277,7 @@
 		DDD0BEC02C914F2200B967A3 = {
 			isa = PBXGroup;
 			children = (
+				DDBEE4122CBB938800B2D191 /* a2-s3841083-s3971510.xctestplan */,
 				DDEC797E2CB767A900CA614C /* README.md */,
 				DD912F852CAA56970003B46B /* a2-s3841083-s3971510.docc */,
 				DDD0BECB2C914F2200B967A3 /* a2-s3841083-s3971510 */,

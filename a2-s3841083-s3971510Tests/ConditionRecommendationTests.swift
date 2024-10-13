@@ -89,25 +89,12 @@ final class ConditionRecommendationTests: XCTestCase {
     func mockDailyWeatherResponse() -> ResponseBody.DailyWeatherResponse {
         return ResponseBody.DailyWeatherResponse(
             dt: 1697028000,
-            sunrise: 1696992000,
-            sunset: 1697035200,
-            moonrise: 1697000000,
-            moonset: 1697050000,
-            moon_phase: 0.5,
-            summary: "Partly cloudy",
             temp: mockTempResponse(),
-            feels_like: mockFeelsLikeResponse(),
-            pressure: 1013,
             humidity: 65,
-            dew_point: 14.0,
             wind_speed: 5.0,
-            wind_deg: 200,
-            wind_gust: 8.0,
             weather: [mockWeatherResponse()],
-            clouds: 20,
             pop: 0.1,
-            rain: 0.2,
-            uvi: 5.0
+            rain: 0.2
         )
     }
     
@@ -124,19 +111,8 @@ final class ConditionRecommendationTests: XCTestCase {
         return ResponseBody.TempResponse(
             day: 20.0,
             min: 15.0,
-            max: 25.0,
-            night: 18.0,
-            eve: 22.0,
-            morn: 16.0
+            max: 25.0
         )
     }
-    
-    func mockFeelsLikeResponse() -> ResponseBody.FeelsLikeResponse {
-        return ResponseBody.FeelsLikeResponse(
-            day: 18.0,
-            night: 17.0,
-            eve: 20.0,
-            morn: 16.0
-        )
-    }
+
 }
