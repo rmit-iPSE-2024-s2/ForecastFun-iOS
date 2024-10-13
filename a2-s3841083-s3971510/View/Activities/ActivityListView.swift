@@ -13,12 +13,12 @@ struct ActivityListView: View {
     @Environment(\.modelContext) private var context
     @Query private var activities: [Activity]
     @State private var showAddActivitySheet = false
-
+    // Defines the background colour, card colour, highlight colour and text colour for the activities page.
     let backgroundColor = Color(red: 43/255, green: 58/255, blue: 84/255)
     let cardBackgroundColor = Color(red: 36/255, green: 50/255, blue: 71/255)
     let highlightColor = Color(red: 226/255, green:237/255 , blue: 255/255, opacity: 0.7)
     let textColor = Color(red: 226/255, green: 237/255, blue: 255/255)
-
+    // Customises the appearance of the page to match the view of the colours and text.
     init() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -29,7 +29,7 @@ struct ActivityListView: View {
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
     }
-
+    // Contains a list of activities, if there are none, it will say 'No activities added'.
     var body: some View {
         NavigationView {
             ZStack {
@@ -42,10 +42,12 @@ struct ActivityListView: View {
                             .foregroundColor(textColor.opacity(0.7))
                             .padding()
                     } else {
+                        // Displays the list of activities.
                         List {
                             ForEach(activities.filter { $0.added }, id: \.activityId) { activity in
                                 
                                 VStack(alignment: .leading, spacing: 8) {
+                                    // Activity name and deletion button.
                                     HStack {
                                         Text(activity.activityName)
                                             .font(.headline)
@@ -86,6 +88,7 @@ struct ActivityListView: View {
                     }
 
                     Spacer()
+                    // Button to allow you to add a new activity.
 
                     Button(action: {
                         showAddActivitySheet = true
@@ -114,12 +117,12 @@ struct ActivityListView: View {
     }
 
     
-  
+  // Adds activities to the list.
     private func addActivity(_ activity: Activity) {
         context.insert(activity)
     }
 
-   
+   // Deletes activities from the list.
     private func deleteItems(at offsets: IndexSet) {
         for index in offsets {
             let activity = activities.filter{ $0.added }[index]
@@ -128,7 +131,7 @@ struct ActivityListView: View {
     }
     
 }
-
+// Allows you to preview the page. 
 #Preview {
     do {
         let previewer = try ActivityPreviewer()
